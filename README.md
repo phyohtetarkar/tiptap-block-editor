@@ -2,7 +2,7 @@
 
 Notion style AI-powered block editor build with [Tiptap](https://tiptap.dev/) + [Vercel AI SDK](https://sdk.vercel.ai/) + [Shadcn](https://ui.shadcn.com/) + [Tailwindcss](https://tailwindcss.com/).
 
-**Demo**: [https://phyohtetarkar.github.io/tiptap-block-editor/](https://phyohtetarkar.github.io/tiptap-block-editor/)
+**Demo**: [https://tiptap-block-editor.web.app/](https://tiptap-block-editor.web.app/)
 
 <img src="images/block-editor.png">
 
