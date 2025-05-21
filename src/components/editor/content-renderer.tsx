@@ -1,4 +1,3 @@
-"use client";
 import { cn } from "@/lib/utils";
 import type { HLJSPlugin } from "highlight.js";
 import hljs from "highlight.js/lib/common";

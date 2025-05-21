@@ -3,6 +3,7 @@ import { Button } from "./ui/button";
 import { MoonIcon, PencilLineIcon, SunIcon } from "lucide-react";
 import { Editor } from "@tiptap/core";
 import PreviewButton from "./preview-button";
+import GitHubButton from "react-github-btn";
 
 export default function Header({ editor }: { editor?: Editor }) {
   const { theme, setTheme } = useTheme();
@@ -13,6 +14,17 @@ export default function Header({ editor }: { editor?: Editor }) {
         <PencilLineIcon className="size-8" />
         <div className="font-semibold text-2xl">Block Editor</div>
         <div className="grow"></div>
+
+        <div className="h-[28px]">
+          <GitHubButton
+            href="https://github.com/phyohtetarkar/tiptap-block-editor"
+            data-size="large"
+            data-show-count="true"
+            aria-label="Star buttons/github-buttons on GitHub"
+          >
+            Star
+          </GitHubButton>
+        </div>
         <PreviewButton editor={editor} />
         <Button
           variant="ghost"

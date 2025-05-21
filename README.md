@@ -46,8 +46,8 @@ VITE_GOOGLE_GENERATIVE_AI_API_KEY= # Your Gemini API Key
 ## Run locally
 
 ```bash
-pnpm install
-pnpm run dev
+npm install
+npm run dev
 ```
 
 ## License

@@ -146,7 +146,7 @@
 }
 .tiptap div[data-youtube-video].ProseMirror-selectednode iframe {
   transition: outline 0.15s;
-  outline: 3px solid hsl(var(--primary));
+  outline: 3px solid var(--primary);
 }
 .tiptap.ProseMirror img {
   transition: filter 0.1s ease-in-out;

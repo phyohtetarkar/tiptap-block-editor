@@ -1,4 +1,7 @@
 import { Editor } from "@tiptap/core";
+import { useState } from "react";
+import { ContentRenderer } from "./editor";
+import { Button } from "./ui/button";
 import {
   Dialog,
   DialogContent,
@@ -6,10 +9,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./ui/dialog";
-import { Button } from "./ui/button";
-import { ContentRenderer } from "./editor";
-import { useState } from "react";
-import { ScrollArea } from "./ui/scroll-area";
 
 export default function PreviewButton({ editor }: { editor?: Editor }) {
   const [open, setOpen] = useState(false);
@@ -29,16 +28,16 @@ export default function PreviewButton({ editor }: { editor?: Editor }) {
         <Button>Preview</Button>
       </DialogTrigger>
       <DialogContent
-        className="max-w-4xl"
+        className="sm:max-w-4xl p-0"
         onInteractOutside={(evt) => evt.preventDefault()}
         aria-describedby={undefined}
       >
-        <DialogHeader className="mb-4">
+        <DialogHeader className="p-5 pb-0">
           <DialogTitle>Preview</DialogTitle>
         </DialogHeader>
-        <ScrollArea className="max-h-[70vh]">
+        <div className="max-h-[70vh] p-5 overflow-y-auto">
           <ContentRenderer html={html} />
-        </ScrollArea>
+        </div>
       </DialogContent>
     </Dialog>
   );

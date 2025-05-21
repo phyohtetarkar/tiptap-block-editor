@@ -53,19 +53,19 @@ export const DefaultBubbleMenu = ({
       }}
     >
       <ScrollArea className="max-w-[90vw] rounded-md border bg-popover shadow-xl">
-        <div className="flex">
+        <div className="flex h-9">
           {showAiTools && (
             <>
               <AiSelector editor={editor} />
-              <Separator orientation="vertical" className="h-10" />
+              <Separator orientation="vertical" />
             </>
           )}
           <NodeSelector editor={editor} />
-          <Separator orientation="vertical" className="h-10" />
+          <Separator orientation="vertical" />
           <MathSelector editor={editor} />
-          <Separator orientation="vertical" className="h-10" />
+          <Separator orientation="vertical" />
           <TextButtons editor={editor} />
-          <Separator orientation="vertical" className="h-10" />
+          <Separator orientation="vertical" />
           <TextAlignSelector editor={editor} />
         </div>
         <ScrollBar orientation="horizontal" />

@@ -80,12 +80,12 @@ const AiWriterView = ({ editor, node, getPos }: NodeViewProps) => {
             });
           }}
         >
-          <Label className="mb-1">Prompt</Label>
+          <Label className="mb-2">Prompt</Label>
           <Textarea
             ref={inputRef}
             name="prompt"
             placeholder="Enter your prompt"
-            rows={3}
+            className="min-h-24"
           />
           <div className="flex items-center mt-4">
             <Button

@@ -12,7 +12,7 @@ export default async function generateAiResponse({ prompt }: { prompt: string; }
   });
 
   const result = streamText({
-    model: google("gemini-pro"),
+    model: google("gemini-2.0-flash"),
     prompt: prompt,
   });
 
