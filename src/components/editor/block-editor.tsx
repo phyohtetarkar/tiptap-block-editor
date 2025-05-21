@@ -1,15 +1,13 @@
-"use client";
-
 import { cn } from "@/lib/utils";
 import Placeholder from "@tiptap/extension-placeholder";
 import { Content, Editor, EditorContent, useEditor } from "@tiptap/react";
+import { toast } from "sonner";
 import { defaultExtensions } from "./default-extensions";
 import { Ai } from "./extensions/ai";
 import { getSuggestion, SlashCommand } from "./extensions/slash-command";
 import { CodeBlockLanguageMenu } from "./menus/codeblock-language-menu";
 import { DefaultBubbleMenu } from "./menus/default-bubble-menu";
 import { TableOptionsMenu } from "./menus/table-options-menu";
-import { useToast } from "@/hooks/use-toast";
 
 interface BlockEditorProps {
   content?: Content;
@@ -24,7 +22,6 @@ const BlockEditor = ({
   onCreate,
   onUpdate,
 }: BlockEditorProps) => {
-  const { toast } = useToast();
 
   const editor = useEditor({
     extensions: [
@@ -36,12 +33,10 @@ const BlockEditor = ({
       }),
       Ai.configure({
         onError: (error) => {
-          // console.log(error);
-          toast({
-            title: "Error",
-            variant: "destructive",
-            description: error.message,
-          });
+          console.error(error);
+          toast.error("Error", {
+            description: error.message
+          })
         },
       }),
       SlashCommand.configure({

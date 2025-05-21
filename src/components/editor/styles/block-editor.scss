@@ -163,7 +163,7 @@
 
     &.ProseMirror-selectednode iframe {
       transition: outline 0.15s;
-      outline: 3px solid hsl(var(--primary));
+      outline: 3px solid var(--primary);
     }
   }
 
