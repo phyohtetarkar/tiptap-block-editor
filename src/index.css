@@ -117,12 +117,17 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+@theme {
+  --font-inter: Inter, sans-serif;
+  --font-inter-italic: Inter, sans-serif;
+}
+
 @layer base {
   * {
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-inter;
   }
 }
 

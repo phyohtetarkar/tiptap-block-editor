@@ -202,7 +202,7 @@ const getSuggestion = ({ ai }: { ai?: boolean }): SuggestionType => {
     },
     render: () => {
       let component: ReactRenderer<SuggestionListHandle, SuggestionListProps>;
-      let popup: Instance<any>[];
+      let popup: Instance | undefined;
 
       return {
         onStart: (props) => {
@@ -211,16 +211,22 @@ const getSuggestion = ({ ai }: { ai?: boolean }): SuggestionType => {
             editor: props.editor,
           });
 
-          const clientRect = props.clientRect?.();
-          const getReferenceClientRect = clientRect ? () => clientRect : null;
-          popup = tippy("body", {
-            getReferenceClientRect: getReferenceClientRect,
-            appendTo: () => document.body,
+          if (!props.clientRect) {
+            return;
+          }
+
+          const { element: editorElement } = props.editor.options;
+          // @ts-expect-error temporary
+          popup = tippy(editorElement, {
+            getReferenceClientRect: props.clientRect,
             content: component.element,
             showOnCreate: true,
             interactive: true,
             trigger: "manual",
             placement: "bottom-start",
+            popperOptions: {
+              strategy: "absolute",
+            },
           });
         },
 
@@ -230,15 +236,16 @@ const getSuggestion = ({ ai }: { ai?: boolean }): SuggestionType => {
           if (!props.clientRect) {
             return;
           }
-
-          popup[0]?.setProps({
+          
+          popup?.setProps({
+            // @ts-expect-error temporary
             getReferenceClientRect: props.clientRect,
           });
         },
 
         onKeyDown(props) {
           if (props.event.key === "Escape") {
-            popup[0]?.hide();
+            popup?.hide();
 
             return true;
           }
@@ -247,7 +254,7 @@ const getSuggestion = ({ ai }: { ai?: boolean }): SuggestionType => {
         },
 
         onExit() {
-          popup[0]?.destroy();
+          popup?.destroy();
           component.destroy();
         },
       };
