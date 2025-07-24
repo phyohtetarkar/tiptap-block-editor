@@ -1,5 +1,4 @@
 import { cn } from "@/lib/utils";
-import Placeholder from "@tiptap/extension-placeholder";
 import { Content, Editor, EditorContent, useEditor } from "@tiptap/react";
 import { toast } from "sonner";
 import { defaultExtensions } from "./default-extensions";
@@ -8,6 +7,10 @@ import { getSuggestion, SlashCommand } from "./extensions/slash-command";
 import { CodeBlockLanguageMenu } from "./menus/codeblock-language-menu";
 import { DefaultBubbleMenu } from "./menus/default-bubble-menu";
 import { TableOptionsMenu } from "./menus/table-options-menu";
+import { Placeholder } from "@tiptap/extensions";
+import DragHandle from "@tiptap/extension-drag-handle-react";
+import { GripVerticalIcon } from "lucide-react";
+import { offset } from "@floating-ui/dom";
 
 interface BlockEditorProps {
   content?: Content;
@@ -22,7 +25,6 @@ const BlockEditor = ({
   onCreate,
   onUpdate,
 }: BlockEditorProps) => {
-
   const editor = useEditor({
     extensions: [
       ...defaultExtensions,
@@ -35,8 +37,8 @@ const BlockEditor = ({
         onError: (error) => {
           console.error(error);
           toast.error("Error", {
-            description: error.message
-          })
+            description: error.message,
+          });
         },
       }),
       SlashCommand.configure({
@@ -64,6 +66,14 @@ const BlockEditor = ({
 
   return (
     <>
+      <DragHandle
+        editor={editor}
+        computePositionConfig={{
+          middleware: [offset(8)],
+        }}
+      >
+        <GripVerticalIcon className="text-muted-foreground" />
+      </DragHandle>
       <EditorContent
         editor={editor}
         className="prose dark:prose-invert focus:outline-none max-w-full z-0"

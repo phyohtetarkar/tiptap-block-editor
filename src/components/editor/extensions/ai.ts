@@ -27,6 +27,9 @@ declare module "@tiptap/core" {
       setAiWriter: () => ReturnType;
     };
   }
+  interface Storage {
+    ai: AiStorage;
+  }
 }
 
 export const Ai = Extension.create<AiOptions, AiStorage>({
@@ -60,19 +63,19 @@ export const Ai = Extension.create<AiOptions, AiStorage>({
                 status: "loading",
                 message: insert ? prompt : undefined,
                 error: undefined,
-              } as AiStorage;
+              };
               onLoading?.();
             },
             onChunk: (chunk) => {
               editor.commands.command(() => {
-                const storage = editor.storage.ai as AiStorage;
+                const storage = editor.storage.ai;
                 storage.message = chunk;
                 return true;
               });
             },
             onSuccess: (completion) => {
               const cm = editor.chain().command(() => {
-                const storage = editor.storage.ai as AiStorage;
+                const storage = editor.storage.ai;
                 storage.status = "success";
                 return true;
               });
@@ -87,7 +90,7 @@ export const Ai = Extension.create<AiOptions, AiStorage>({
             onError: (error) => {
               onError?.(error);
               const cm = editor.chain().command(() => {
-                const storage = editor.storage.ai as AiStorage;
+                const storage = editor.storage.ai;
                 storage.status = "error";
                 storage.error = error;
                 return true;
@@ -103,8 +106,7 @@ export const Ai = Extension.create<AiOptions, AiStorage>({
 
               cm.run();
             },
-            onComplete: () => {
-            },
+            onComplete: () => {},
           });
 
           return true;

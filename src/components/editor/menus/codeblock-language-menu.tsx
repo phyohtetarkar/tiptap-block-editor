@@ -8,7 +8,8 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { Editor } from "@tiptap/core";
-import { FloatingMenu, useEditorState } from "@tiptap/react";
+import { useEditorState } from "@tiptap/react";
+import { FloatingMenu } from "@tiptap/react/menus";
 import { common } from "lowlight";
 import { ChevronDownIcon } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -42,13 +43,12 @@ export const CodeBlockLanguageMenu = ({
   return (
     <FloatingMenu
       editor={editor}
-      tippyOptions={{
+      options={{
         placement: "top-end",
-        appendTo: "parent",
-        duration: 100,
-        zIndex: 0,
-        offset: [0, 8],
-        getReferenceClientRect: () => {
+        offset: {
+          mainAxis: 8,
+        },
+        inline: (_el) => {
           const { ranges } = editor.state.selection;
           const from = Math.min(...ranges.map((range) => range.$from.pos));
           const to = Math.max(...ranges.map((range) => range.$to.pos));
@@ -68,11 +68,19 @@ export const CodeBlockLanguageMenu = ({
             const node = editor.view.nodeDOM(nodePos) as HTMLElement;
 
             if (node) {
-              return node.getBoundingClientRect();
+              const rect = node.getBoundingClientRect();
+              return {
+                x: rect.x,
+                y: rect.y,
+              };
             }
           }
 
-          return editor.view.dom.getBoundingClientRect();
+          const rect = editor.view.dom.getBoundingClientRect();
+          return {
+            x: rect.x,
+            y: rect.y,
+          };
         },
       }}
       className={cn("flex w-fit max-w-[90vw] space-x-0.5")}

@@ -1,8 +1,18 @@
 import { Button } from "@/components/ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { Editor, FloatingMenu } from "@tiptap/react";
+import { Editor } from "@tiptap/react";
+import { FloatingMenu } from "@tiptap/react/menus";
 import {
   Columns,
   MoreHorizontal,
@@ -15,39 +25,78 @@ export const TableOptionsMenu = ({ editor }: { editor: Editor | null }) => {
     return null;
   }
 
-  const menuItemClass = cn("px-2 py-1.5 text-sm hover:bg-accent rounded-md")
+  const menuItemClass = cn("px-2 py-1.5 text-sm hover:bg-accent rounded-md");
 
   return (
     <FloatingMenu
       editor={editor}
-      tippyOptions={{
-        placement: "top-end",
-        appendTo: "parent",
-        duration: 100,
-        zIndex: 0,
-        offset: [0, 8],
-        getReferenceClientRect: () => {
-          const { ranges } = editor.state.selection;
-          const from = Math.min(...ranges.map((range) => range.$from.pos));
-          const to = Math.max(...ranges.map((range) => range.$to.pos));
+      options={{
+        placement: "top-start",
+        
+        // offset: (state) => {
+        //   console.log(state);
+        //   const { ranges } = editor.state.selection;
+        //   const from = Math.min(...ranges.map((range) => range.$from.pos));
+        //   const to = Math.max(...ranges.map((range) => range.$to.pos));
 
-          let nodePos: number | undefined = undefined;
+        //   let nodePos: number | undefined = undefined;
 
-          editor.state.doc.nodesBetween(from, to, (_node, p) => {
-            nodePos = p;
-            return false;
-          });
+        //   editor.state.doc.nodesBetween(from, to, (_node, p) => {
+        //     nodePos = p;
+        //     return false;
+        //   });
 
-          if (nodePos !== undefined) {
-            const node = editor.view.nodeDOM(nodePos) as HTMLElement;
+        //   if (nodePos) {
+        //     const node = editor.view.nodeDOM(nodePos) as HTMLElement;
+        //     if (node) {
+        //       const rect = node.getBoundingClientRect();
+        //       console.log("rect: ", rect);
+        //       return {
+        //         mainAxis: -state.rects.floating.width
+        //       };
+        //     }
+        //   }
 
-            if (node) {
-              return node.getBoundingClientRect();
-            }
-          }
+        //   return {
+        //     alignmentAxis: 300,
+        //   };
+        // },
+        inline: false,
+        autoPlacement: false,
+        shift: false,
+        // inline: (_el) => {
+        //   const { ranges } = editor.state.selection;
+        //   const from = Math.min(...ranges.map((range) => range.$from.pos));
+        //   const to = Math.max(...ranges.map((range) => range.$to.pos));
 
-          return editor.view.dom.getBoundingClientRect();
-        },
+        //   let nodePos: number | undefined = undefined;
+
+        //   editor.state.doc.nodesBetween(from, to, (_node, p) => {
+        //     nodePos = p;
+        //     return false;
+        //   });
+
+        //   console.log("nodePos: ", nodePos)
+
+        //   if (nodePos !== undefined) {
+        //     const node = editor.view.nodeDOM(nodePos) as HTMLElement;
+
+        //     if (node) {
+        //       const rect = node.getBoundingClientRect();
+        //       console.log("rect: ", rect)
+        //       return {
+        //         x: 0,
+        //         y: 0,
+        //       };
+        //     }
+        //   }
+
+        //   const rect = editor.view.dom.getBoundingClientRect();
+        //   return {
+        //     x: 0,
+        //     y: 0,
+        //   };
+        // },
       }}
       className={cn("flex w-fit max-w-[90vw] space-x-0.5")}
       shouldShow={({ editor }) => {
@@ -68,9 +117,7 @@ export const TableOptionsMenu = ({ editor }: { editor: Editor | null }) => {
                 </Button>
               </TooltipTrigger>
             </PopoverTrigger>
-            <TooltipContent>
-              Column
-            </TooltipContent>
+            <TooltipContent>Column</TooltipContent>
           </Tooltip>
           <PopoverContent
             className="flex max-h-80 w-40 p-1 flex-col overflow-hidden overflow-y-auto rounded border shadow-xl"
@@ -121,9 +168,7 @@ export const TableOptionsMenu = ({ editor }: { editor: Editor | null }) => {
                 </Button>
               </TooltipTrigger>
             </PopoverTrigger>
-            <TooltipContent>
-              Row
-            </TooltipContent>
+            <TooltipContent>Row</TooltipContent>
           </Tooltip>
           <PopoverContent
             className="flex max-h-80 w-40 p-1 flex-col overflow-hidden overflow-y-auto rounded border shadow-xl"
@@ -174,9 +219,7 @@ export const TableOptionsMenu = ({ editor }: { editor: Editor | null }) => {
                 </Button>
               </TooltipTrigger>
             </PopoverTrigger>
-            <TooltipContent>
-              Cell
-            </TooltipContent>
+            <TooltipContent>Cell</TooltipContent>
           </Tooltip>
           <PopoverContent
             className="flex max-h-80 w-40 p-1 flex-col overflow-hidden overflow-y-auto rounded border shadow-xl"
@@ -227,9 +270,7 @@ export const TableOptionsMenu = ({ editor }: { editor: Editor | null }) => {
                 </Button>
               </TooltipTrigger>
             </PopoverTrigger>
-            <TooltipContent>
-              Options
-            </TooltipContent>
+            <TooltipContent>Options</TooltipContent>
           </Tooltip>
           <PopoverContent
             className="flex max-h-80 w-40 p-1 flex-col overflow-hidden overflow-y-auto rounded border shadow-xl"

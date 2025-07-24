@@ -1,5 +1,5 @@
-import { SlashCommandNodeAttrs } from "./slash-command";
-import { ReactRenderer } from "@tiptap/react";
+import { computePosition, flip, shift } from "@floating-ui/dom";
+import { Editor, posToDOMRect, ReactRenderer } from "@tiptap/react";
 import { SuggestionOptions } from "@tiptap/suggestion";
 import {
   CodeIcon,
@@ -15,7 +15,7 @@ import {
   TableIcon,
   TextQuoteIcon,
 } from "lucide-react";
-import tippy, { Instance } from "tippy.js";
+import { SlashCommandNodeAttrs } from "./slash-command";
 import SuggestionList, {
   CommandSuggestionItem,
   SuggestionListHandle,
@@ -188,6 +188,33 @@ const withAiList: CommandSuggestionItem[] = [
   ...list,
 ];
 
+const updatePosition = (editor: Editor, element: Element) => {
+  if (!(element instanceof HTMLElement)) {
+    return;
+  }
+
+  const virtualElement = {
+    getBoundingClientRect: () => {
+      return posToDOMRect(
+        editor.view,
+        editor.state.selection.from,
+        editor.state.selection.to
+      );
+    },
+  };
+
+  computePosition(virtualElement, element, {
+    placement: "bottom-start",
+    strategy: "absolute",
+    middleware: [shift(), flip()],
+  }).then(({ x, y, strategy }) => {
+    element.style.width = "max-content";
+    element.style.position = strategy;
+    element.style.left = `${x}px`;
+    element.style.top = `${y}px`;
+  });
+};
+
 const getSuggestion = ({ ai }: { ai?: boolean }): SuggestionType => {
   return {
     items: ({ query }) => {
@@ -202,7 +229,7 @@ const getSuggestion = ({ ai }: { ai?: boolean }): SuggestionType => {
     },
     render: () => {
       let component: ReactRenderer<SuggestionListHandle, SuggestionListProps>;
-      let popup: Instance | undefined;
+      // let popup: Instance | undefined;
 
       return {
         onStart: (props) => {
@@ -215,19 +242,27 @@ const getSuggestion = ({ ai }: { ai?: boolean }): SuggestionType => {
             return;
           }
 
-          const { element: editorElement } = props.editor.options;
-          // @ts-expect-error temporary
-          popup = tippy(editorElement, {
-            getReferenceClientRect: props.clientRect,
-            content: component.element,
-            showOnCreate: true,
-            interactive: true,
-            trigger: "manual",
-            placement: "bottom-start",
-            popperOptions: {
-              strategy: "absolute",
-            },
-          });
+          if (component.element instanceof HTMLElement) {
+            component.element.style.position = "absolute";
+
+            document.body.appendChild(component.element);
+
+            updatePosition(props.editor, component.element);
+          }
+
+          // const { element: editorElement } = props.editor.options;
+          // // @ts-expect-error temporary
+          // popup = tippy(editorElement, {
+          //   getReferenceClientRect: props.clientRect,
+          //   content: component.element,
+          //   showOnCreate: true,
+          //   interactive: true,
+          //   trigger: "manual",
+          //   placement: "bottom-start",
+          //   popperOptions: {
+          //     strategy: "absolute",
+          //   },
+          // });
         },
 
         onUpdate(props) {
@@ -236,16 +271,19 @@ const getSuggestion = ({ ai }: { ai?: boolean }): SuggestionType => {
           if (!props.clientRect) {
             return;
           }
-          
-          popup?.setProps({
-            // @ts-expect-error temporary
-            getReferenceClientRect: props.clientRect,
-          });
+
+          updatePosition(props.editor, component.element);
+
+          // popup?.setProps({
+          //   // @ts-expect-error temporary
+          //   getReferenceClientRect: props.clientRect,
+          // });
         },
 
         onKeyDown(props) {
           if (props.event.key === "Escape") {
-            popup?.hide();
+            // popup?.hide();
+            component.destroy();
 
             return true;
           }
@@ -254,7 +292,8 @@ const getSuggestion = ({ ai }: { ai?: boolean }): SuggestionType => {
         },
 
         onExit() {
-          popup?.destroy();
+          // popup?.destroy();
+          component.element.remove();
           component.destroy();
         },
       };

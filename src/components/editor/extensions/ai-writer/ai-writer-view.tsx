@@ -8,7 +8,6 @@ import { NodeViewWrapper, useEditorState } from "@tiptap/react";
 import { CheckIcon, LoaderCircleIcon } from "lucide-react";
 import { useRef } from "react";
 import Markdown from "react-markdown";
-import { AiStorage } from "../ai";
 
 const AiWriterView = ({ editor, node, getPos }: NodeViewProps) => {
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
@@ -16,7 +15,7 @@ const AiWriterView = ({ editor, node, getPos }: NodeViewProps) => {
   const { message, status, error } = useEditorState({
     editor: editor,
     selector: (instance) => {
-      const storage = instance.editor.storage.ai as AiStorage;
+      const storage = instance.editor.storage.ai;
       return {
         status: storage.status,
         message: storage.message,
@@ -31,6 +30,9 @@ const AiWriterView = ({ editor, node, getPos }: NodeViewProps) => {
     }
 
     const from = getPos();
+    if (from === undefined) {
+      return;
+    }
     const to = from + node.nodeSize;
 
     editor.chain().focus().insertContentAt({ from, to }, message).run();
@@ -38,6 +40,9 @@ const AiWriterView = ({ editor, node, getPos }: NodeViewProps) => {
 
   const remove = () => {
     const from = getPos();
+    if (from === undefined) {
+      return;
+    }
     const to = from + node.nodeSize;
     editor.chain().focus().deleteRange({ from, to }).run();
   };
