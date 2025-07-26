@@ -6,9 +6,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { NodeViewProps } from "@tiptap/core";
 import { NodeViewWrapper, useEditorState } from "@tiptap/react";
 import { CheckIcon, LoaderCircleIcon } from "lucide-react";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import Markdown from "react-markdown";
-import { AiStorage } from "../ai";
 
 const AiWriterView = ({ editor, node, getPos }: NodeViewProps) => {
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
@@ -16,7 +15,7 @@ const AiWriterView = ({ editor, node, getPos }: NodeViewProps) => {
   const { message, status, error } = useEditorState({
     editor: editor,
     selector: (instance) => {
-      const storage = instance.editor.storage.ai as AiStorage;
+      const storage = instance.editor.storage.ai;
       return {
         status: storage.status,
         message: storage.message,
@@ -25,12 +24,24 @@ const AiWriterView = ({ editor, node, getPos }: NodeViewProps) => {
     },
   });
 
+  useEffect(() => {
+    const id = window.requestAnimationFrame(() => {
+      inputRef.current?.focus();
+    });
+    return () => {
+      window.cancelAnimationFrame(id);
+    };
+  }, []);
+
   const insert = () => {
     if (!message) {
       return;
     }
 
     const from = getPos();
+    if (from === undefined) {
+      return;
+    }
     const to = from + node.nodeSize;
 
     editor.chain().focus().insertContentAt({ from, to }, message).run();
@@ -38,6 +49,9 @@ const AiWriterView = ({ editor, node, getPos }: NodeViewProps) => {
 
   const remove = () => {
     const from = getPos();
+    if (from === undefined) {
+      return;
+    }
     const to = from + node.nodeSize;
     editor.chain().focus().deleteRange({ from, to }).run();
   };
@@ -86,6 +100,7 @@ const AiWriterView = ({ editor, node, getPos }: NodeViewProps) => {
             name="prompt"
             placeholder="Enter your prompt"
             className="min-h-24"
+            autoFocus
           />
           <div className="flex items-center mt-4">
             <Button

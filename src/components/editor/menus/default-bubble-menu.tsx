@@ -1,5 +1,5 @@
 import { Editor, isTextSelection } from "@tiptap/core";
-import { BubbleMenu } from "@tiptap/react";
+import { BubbleMenu } from "@tiptap/react/menus";
 import {
   AiSelector,
   MathSelector,
@@ -24,10 +24,9 @@ export const DefaultBubbleMenu = ({
   return (
     <BubbleMenu
       editor={editor}
-      tippyOptions={{
+      options={{
         placement: "top",
-        hideOnClick: false,
-        moveTransition: "transform 0.15s ease-out",
+        offset: 8,
       }}
       shouldShow={({ editor, state }) => {
         const { selection } = state;

@@ -22,7 +22,6 @@ export const Mathematics = Node.create<MathematicsOptions>({
   inline: true,
   group: "inline",
   atom: true,
-  marks: "",
 
   addAttributes() {
     return {
@@ -106,8 +105,8 @@ export const Mathematics = Node.create<MathematicsOptions>({
     return [{ tag: `span[data-type="${this.name}"]` }];
   },
 
-  renderHTML({ node, HTMLAttributes }) {
-    const latex = node.attrs["latex"] ?? "";
+  renderHTML({ HTMLAttributes }) {
+    // const latex = node.attrs["latex"] ?? "";
     // const dom = document.createElement("span");
 
     // Object.entries(HTMLAttributes).forEach(([key, value]) => {
@@ -127,7 +126,6 @@ export const Mathematics = Node.create<MathematicsOptions>({
       mergeAttributes(HTMLAttributes, {
         "data-type": this.name,
       }),
-      latex,
     ];
   },
 
@@ -148,20 +146,28 @@ export const Mathematics = Node.create<MathematicsOptions>({
         dom.setAttribute(key, value);
       });
 
-      dom.addEventListener("click", () => {
+      const handleClick = () => {
         if (editor.isEditable && typeof getPos === "function") {
           const pos = getPos();
+          if (pos === undefined) {
+            return;
+          }
           const nodeSize = node.nodeSize;
           editor.commands.setTextSelection({ from: pos, to: pos + nodeSize });
         }
-      });
+      };
 
-      dom.contentEditable = "false";
+      dom.addEventListener("click", handleClick);
 
-      dom.innerHTML = katex.renderToString(latex, this.options.katexOptions);
+      //dom.contentEditable = "false";
+
+      katex.render(latex, dom, this.options.katexOptions);
 
       return {
         dom: dom,
+        destroy: () => {
+          dom.removeEventListener("click", handleClick);
+        },
       };
     };
   },

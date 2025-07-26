@@ -26,7 +26,7 @@ export const AiWriter = Node.create<AiWriterOptions>({
       HTMLAttributes: {},
     };
   },
-  
+
   addCommands() {
     return {
       setAiWriter:
