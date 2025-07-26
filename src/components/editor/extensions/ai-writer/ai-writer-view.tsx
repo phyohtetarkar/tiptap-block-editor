@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { NodeViewProps } from "@tiptap/core";
 import { NodeViewWrapper, useEditorState } from "@tiptap/react";
 import { CheckIcon, LoaderCircleIcon } from "lucide-react";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import Markdown from "react-markdown";
 
 const AiWriterView = ({ editor, node, getPos }: NodeViewProps) => {
@@ -23,6 +23,15 @@ const AiWriterView = ({ editor, node, getPos }: NodeViewProps) => {
       };
     },
   });
+
+  useEffect(() => {
+    const id = window.requestAnimationFrame(() => {
+      inputRef.current?.focus();
+    });
+    return () => {
+      window.cancelAnimationFrame(id);
+    };
+  }, []);
 
   const insert = () => {
     if (!message) {
@@ -91,6 +100,7 @@ const AiWriterView = ({ editor, node, getPos }: NodeViewProps) => {
             name="prompt"
             placeholder="Enter your prompt"
             className="min-h-24"
+            autoFocus
           />
           <div className="flex items-center mt-4">
             <Button

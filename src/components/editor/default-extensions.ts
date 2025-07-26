@@ -3,17 +3,14 @@ import { mergeAttributes } from "@tiptap/core";
 import Heading from "@tiptap/extension-heading";
 import Image from "@tiptap/extension-image";
 import {
-  Table,
   TableCell,
   TableHeader,
-  TableRow,
-  createColGroup,
+  TableRow
 } from "@tiptap/extension-table";
 import TextAlign from "@tiptap/extension-text-align";
 import { TextStyle } from "@tiptap/extension-text-style";
 import Youtube from "@tiptap/extension-youtube";
 import { CharacterCount } from "@tiptap/extensions";
-import { DOMOutputSpec } from "@tiptap/pm/model";
 import StarterKit from "@tiptap/starter-kit";
 import { common, createLowlight } from "lowlight";
 import { Markdown } from "tiptap-markdown";
@@ -21,6 +18,7 @@ import { AiPlaceholder } from "./extensions/ai-placeholder";
 import { AiWriter } from "./extensions/ai-writer";
 import { CustomCodeBlock } from "./extensions/code-block";
 import { Mathematics } from "./extensions/mathematics";
+import { CustomTable } from "./extensions/table";
 
 const TiptapStarterKit = StarterKit.configure({
   bulletList: {
@@ -117,33 +115,7 @@ const TiptapTextAlign = TextAlign.configure({
   types: ["heading", "paragraph", "math"],
 });
 
-const TiptapTable = Table.extend({
-  renderHTML({ node, HTMLAttributes }) {
-    const { colgroup, tableWidth, tableMinWidth } = createColGroup(
-      node,
-      this.options.cellMinWidth
-    );
-
-    const table: DOMOutputSpec = [
-      "div",
-      {
-        class: "table-wrapper overflow-y-auto my-[1em] not-draggable",
-      },
-      [
-        "table",
-        mergeAttributes(this.options.HTMLAttributes, HTMLAttributes, {
-          style: tableWidth
-            ? `width: ${tableWidth}`
-            : `minWidth: ${tableMinWidth}`,
-        }),
-        colgroup,
-        ["tbody", 0],
-      ],
-    ];
-
-    return table;
-  },
-}).configure({
+const TiptapTable = CustomTable.configure({
   HTMLAttributes: {
     class: cn("not-prose table-auto border-collapse w-full"),
   },
@@ -171,11 +143,6 @@ const TiptapImage = Image.configure({
     class: cn("rounded border mx-auto"),
   },
 });
-
-// const DragHandle = GlobalDragHandle.configure({
-//   dragHandleWidth: 25,
-//   excludedTags: ["table"],
-// });
 
 const aiPlaceholder = AiPlaceholder.configure({
   HTMLAttributes: {

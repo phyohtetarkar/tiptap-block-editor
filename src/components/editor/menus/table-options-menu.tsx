@@ -12,96 +12,30 @@ import {
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { Editor } from "@tiptap/react";
-import { FloatingMenu } from "@tiptap/react/menus";
 import {
   Columns,
   MoreHorizontal,
   RectangleHorizontal,
   Rows,
 } from "lucide-react";
+import { TableMenu } from "../extensions/table";
 
 export const TableOptionsMenu = ({ editor }: { editor: Editor | null }) => {
   if (!editor) {
     return null;
   }
 
-  const menuItemClass = cn("px-2 py-1.5 text-sm hover:bg-accent rounded-md");
+  const menuItemClass = cn(
+    "px-2 py-1.5 text-sm hover:bg-accent rounded-md text-start"
+  );
 
   return (
-    <FloatingMenu
+    <TableMenu
       editor={editor}
       options={{
-        placement: "top-start",
-        
-        // offset: (state) => {
-        //   console.log(state);
-        //   const { ranges } = editor.state.selection;
-        //   const from = Math.min(...ranges.map((range) => range.$from.pos));
-        //   const to = Math.max(...ranges.map((range) => range.$to.pos));
-
-        //   let nodePos: number | undefined = undefined;
-
-        //   editor.state.doc.nodesBetween(from, to, (_node, p) => {
-        //     nodePos = p;
-        //     return false;
-        //   });
-
-        //   if (nodePos) {
-        //     const node = editor.view.nodeDOM(nodePos) as HTMLElement;
-        //     if (node) {
-        //       const rect = node.getBoundingClientRect();
-        //       console.log("rect: ", rect);
-        //       return {
-        //         mainAxis: -state.rects.floating.width
-        //       };
-        //     }
-        //   }
-
-        //   return {
-        //     alignmentAxis: 300,
-        //   };
-        // },
-        inline: false,
-        autoPlacement: false,
-        shift: false,
-        // inline: (_el) => {
-        //   const { ranges } = editor.state.selection;
-        //   const from = Math.min(...ranges.map((range) => range.$from.pos));
-        //   const to = Math.max(...ranges.map((range) => range.$to.pos));
-
-        //   let nodePos: number | undefined = undefined;
-
-        //   editor.state.doc.nodesBetween(from, to, (_node, p) => {
-        //     nodePos = p;
-        //     return false;
-        //   });
-
-        //   console.log("nodePos: ", nodePos)
-
-        //   if (nodePos !== undefined) {
-        //     const node = editor.view.nodeDOM(nodePos) as HTMLElement;
-
-        //     if (node) {
-        //       const rect = node.getBoundingClientRect();
-        //       console.log("rect: ", rect)
-        //       return {
-        //         x: 0,
-        //         y: 0,
-        //       };
-        //     }
-        //   }
-
-        //   const rect = editor.view.dom.getBoundingClientRect();
-        //   return {
-        //     x: 0,
-        //     y: 0,
-        //   };
-        // },
+        placement: "top-end",
       }}
       className={cn("flex w-fit max-w-[90vw] space-x-0.5")}
-      shouldShow={({ editor }) => {
-        return editor.isActive("table");
-      }}
     >
       <TooltipProvider delayDuration={300}>
         <Popover>
@@ -109,7 +43,7 @@ export const TableOptionsMenu = ({ editor }: { editor: Editor | null }) => {
             <PopoverTrigger asChild>
               <TooltipTrigger asChild>
                 <Button
-                  className="drop-shadow-lg"
+                  className="drop-shadow-lg bg-background dark:bg-background dark:hover:bg-accent"
                   variant="outline"
                   size="icon"
                 >
@@ -124,33 +58,33 @@ export const TableOptionsMenu = ({ editor }: { editor: Editor | null }) => {
             align="end"
           >
             <div className="flex flex-col">
-              <div
+              <button
                 onClick={() => {
                   editor.chain().focus().addColumnBefore().run();
                 }}
                 className={menuItemClass}
-                role="button"
+                type="button"
               >
                 Add column before
-              </div>
-              <div
+              </button>
+              <button
                 onClick={() => {
                   editor.chain().focus().addColumnAfter().run();
                 }}
                 className={menuItemClass}
-                role="button"
+                type="button"
               >
                 Add column after
-              </div>
-              <div
+              </button>
+              <button
                 onClick={() => {
                   editor.chain().focus().deleteColumn().run();
                 }}
                 className={cn([menuItemClass], "text-destructive")}
-                role="button"
+                type="button"
               >
                 Delete column
-              </div>
+              </button>
             </div>
           </PopoverContent>
         </Popover>
@@ -160,7 +94,7 @@ export const TableOptionsMenu = ({ editor }: { editor: Editor | null }) => {
             <PopoverTrigger asChild>
               <TooltipTrigger asChild>
                 <Button
-                  className="drop-shadow-lg"
+                  className="drop-shadow-lg bg-background dark:bg-background dark:hover:bg-accent"
                   variant="outline"
                   size="icon"
                 >
@@ -175,33 +109,33 @@ export const TableOptionsMenu = ({ editor }: { editor: Editor | null }) => {
             align="end"
           >
             <div className="flex flex-col">
-              <div
+              <button
                 onClick={() => {
                   editor.chain().focus().addRowBefore().run();
                 }}
                 className={menuItemClass}
-                role="button"
+                type="button"
               >
                 Add row before
-              </div>
-              <div
+              </button>
+              <button
                 onClick={() => {
                   editor.chain().focus().addRowAfter().run();
                 }}
                 className={menuItemClass}
-                role="button"
+                type="button"
               >
                 Add row after
-              </div>
-              <div
+              </button>
+              <button
                 onClick={() => {
                   editor.chain().focus().deleteRow().run();
                 }}
                 className={cn([menuItemClass], "text-destructive")}
-                role="button"
+                type="button"
               >
                 Delete row
-              </div>
+              </button>
             </div>
           </PopoverContent>
         </Popover>
@@ -211,7 +145,7 @@ export const TableOptionsMenu = ({ editor }: { editor: Editor | null }) => {
             <PopoverTrigger asChild>
               <TooltipTrigger asChild>
                 <Button
-                  className="drop-shadow-lg"
+                  className="drop-shadow-lg bg-background dark:bg-background dark:hover:bg-accent"
                   variant="outline"
                   size="icon"
                 >
@@ -226,33 +160,33 @@ export const TableOptionsMenu = ({ editor }: { editor: Editor | null }) => {
             align="end"
           >
             <div className="flex flex-col">
-              <div
+              <button
                 onClick={() => {
                   editor.chain().focus().mergeCells().run();
                 }}
                 className={menuItemClass}
-                role="button"
+                type="button"
               >
                 Merge cells
-              </div>
-              <div
+              </button>
+              <button
                 onClick={() => {
                   editor.chain().focus().splitCell().run();
                 }}
                 className={menuItemClass}
-                role="button"
+                type="button"
               >
                 Split cell
-              </div>
-              <div
+              </button>
+              <button
                 onClick={() => {
                   editor.chain().focus().toggleHeaderCell().run();
                 }}
                 className={menuItemClass}
-                role="button"
+                type="button"
               >
                 Toggle header cell
-              </div>
+              </button>
             </div>
           </PopoverContent>
         </Popover>
@@ -262,7 +196,7 @@ export const TableOptionsMenu = ({ editor }: { editor: Editor | null }) => {
             <PopoverTrigger asChild>
               <TooltipTrigger asChild>
                 <Button
-                  className="drop-shadow-lg"
+                  className="drop-shadow-lg bg-background dark:bg-background dark:hover:bg-accent"
                   variant="outline"
                   size="icon"
                 >
@@ -277,37 +211,37 @@ export const TableOptionsMenu = ({ editor }: { editor: Editor | null }) => {
             align="end"
           >
             <div className="flex flex-col">
-              <div
+              <button
                 onClick={() => {
                   editor.chain().focus().toggleHeaderRow().run();
                 }}
                 className={menuItemClass}
-                role="button"
+                type="button"
               >
                 Toggle header row
-              </div>
-              <div
+              </button>
+              <button
                 onClick={() => {
                   editor.chain().focus().toggleHeaderColumn().run();
                 }}
                 className={menuItemClass}
-                role="button"
+                type="button"
               >
                 Toggle header col
-              </div>
-              <div
+              </button>
+              <button
                 onClick={() => {
                   editor.chain().focus().deleteTable().run();
                 }}
                 className={cn([menuItemClass], "text-destructive")}
-                role="button"
+                type="button"
               >
                 Delete table
-              </div>
+              </button>
             </div>
           </PopoverContent>
         </Popover>
       </TooltipProvider>
-    </FloatingMenu>
+    </TableMenu>
   );
 };

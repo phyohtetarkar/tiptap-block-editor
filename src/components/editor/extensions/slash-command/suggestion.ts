@@ -283,7 +283,7 @@ const getSuggestion = ({ ai }: { ai?: boolean }): SuggestionType => {
         onKeyDown(props) {
           if (props.event.key === "Escape") {
             // popup?.hide();
-            component.destroy();
+            //component.destroy();
 
             return true;
           }
@@ -293,8 +293,8 @@ const getSuggestion = ({ ai }: { ai?: boolean }): SuggestionType => {
 
         onExit() {
           // popup?.destroy();
-          component.element.remove();
-          component.destroy();
+          component?.element.remove();
+          component?.destroy();
         },
       };
     },
