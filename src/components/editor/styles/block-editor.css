@@ -97,7 +97,7 @@
   margin: 0;
 }
 .tiptap table .selectedCell {
-  background-color: rgba(90, 187, 247, 0.3);
+  background-color: oklch(from var(--primary) l c h/0.2);
 }
 .tiptap .tableWrapper {
   overflow-x: auto;
@@ -118,6 +118,12 @@
   transition: outline 0.15s;
   outline: 3px solid var(--primary);
 }
+.tiptap.ProseMirror-hideselection ::selection {
+  background-color: transparent;
+}
+.tiptap.ProseMirror:not(.readonly):not(.ProseMirror-hideselection) ::selection {
+  background-color: oklch(from var(--primary) l c h/0.2);
+}
 .tiptap.ProseMirror img {
   transition: filter 0.1s ease-in-out;
 }
@@ -127,6 +133,22 @@
 }
 .tiptap.ProseMirror img.ProseMirror-selectednode {
   filter: brightness(90%);
+}
+.tiptap.ProseMirror th, .tiptap td {
+  position: relative;
+}
+.tiptap.ProseMirror .column-resize-handle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: calc(100% + 2px);
+  width: 3px;
+  margin-inline-start: -1px;
+  margin-top: -1px;
+  background-color: var(--primary);
+  cursor: col-resize;
+  z-index: 1;
+  pointer-events: auto;
 }
 .tiptap img.ProseMirror-separator {
   display: inline !important;

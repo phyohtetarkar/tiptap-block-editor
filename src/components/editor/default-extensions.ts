@@ -2,23 +2,19 @@ import { cn } from "@/lib/utils";
 import { mergeAttributes } from "@tiptap/core";
 import Heading from "@tiptap/extension-heading";
 import Image from "@tiptap/extension-image";
-import {
-  TableCell,
-  TableHeader,
-  TableRow
-} from "@tiptap/extension-table";
+import { TableCell, TableHeader, TableRow } from "@tiptap/extension-table";
 import TextAlign from "@tiptap/extension-text-align";
 import { TextStyle } from "@tiptap/extension-text-style";
 import Youtube from "@tiptap/extension-youtube";
 import { CharacterCount } from "@tiptap/extensions";
 import StarterKit from "@tiptap/starter-kit";
 import { common, createLowlight } from "lowlight";
-import { Markdown } from "tiptap-markdown";
 import { AiPlaceholder } from "./extensions/ai-placeholder";
 import { AiWriter } from "./extensions/ai-writer";
 import { CustomCodeBlock } from "./extensions/code-block";
 import { Mathematics } from "./extensions/mathematics";
 import { CustomTable } from "./extensions/table";
+import { Markdown } from "@tiptap/markdown";
 
 const TiptapStarterKit = StarterKit.configure({
   bulletList: {
@@ -117,10 +113,11 @@ const TiptapTextAlign = TextAlign.configure({
 
 const TiptapTable = CustomTable.configure({
   HTMLAttributes: {
-    class: cn("not-prose table-auto border-collapse w-full"),
+    class: cn("table-auto border-collapse w-full not-prose"),
   },
   lastColumnResizable: false,
   allowTableNodeSelection: true,
+  resizable: true,
 });
 
 const TiptapTableHeader = TableHeader.configure({
@@ -131,9 +128,24 @@ const TiptapTableHeader = TableHeader.configure({
   },
 });
 
-const TiptapTableCell = TableCell.configure({
+const TiptapTableCell = TableCell.extend({
+  addAttributes() {
+    return {
+      ...this.parent?.(),
+      verticalAlign: {
+        default: "top",
+        parseHTML: (element) => {
+          return element.style.verticalAlign || "top";
+        },
+        renderHTML: (attributes) => {
+          return { style: `vertical-align: ${attributes.verticalAlign}` };
+        },
+      },
+    };
+  },
+}).configure({
   HTMLAttributes: {
-    class: cn("border border-default p-2 min-w-[150px] align-middle"),
+    class: cn("border border-default p-2 min-w-[150px]"),
   },
 });
 
@@ -156,8 +168,16 @@ const aiWriter = AiWriter.configure({
   },
 });
 
-const markdown = Markdown.configure({
-  html: true,
+const TipTapMarkdown = Markdown.configure({
+  indentation: {
+    style: "tab", // 'space' or 'tab'
+    size: 1, // Number of spaces or tabs
+  },
+  markedOptions: {
+    gfm: true, // GitHub Flavored Markdown
+    breaks: false, // Convert \n to <br>
+    pedantic: false, // Strict Markdown mode
+  },
 });
 
 const TiptapYoutube = Youtube.configure({
@@ -191,5 +211,5 @@ export const defaultExtensions = [
   codeBlock,
   aiPlaceholder,
   aiWriter,
-  markdown,
+  TipTapMarkdown,
 ];

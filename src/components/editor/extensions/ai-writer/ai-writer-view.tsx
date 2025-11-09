@@ -44,7 +44,13 @@ const AiWriterView = ({ editor, node, getPos }: NodeViewProps) => {
     }
     const to = from + node.nodeSize;
 
-    editor.chain().focus().insertContentAt({ from, to }, message).run();
+    editor
+      .chain()
+      .focus()
+      .insertContentAt({ from, to }, message, {
+        contentType: "markdown"
+      })
+      .run();
   };
 
   const remove = () => {

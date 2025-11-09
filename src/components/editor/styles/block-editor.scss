@@ -152,7 +152,7 @@
   }
 
   table .selectedCell {
-    background-color: rgba(90, 187, 247, 0.3);
+    background-color: oklch(from var(--primary) l c h / 0.2);
   }
 
   .tableWrapper {
@@ -178,23 +178,29 @@
     }
   }
 
-  // &.ProseMirror {
-  //   .selection {
-  //     display: inline-block;
-  //     background-color: hsl(var(--secondary));
-  //   }
+  &.ProseMirror-hideselection {
+    ::selection {
+      background-color: transparent;
+    }
+  }
 
-  //   ::selection {
-  //     display: inline-block;
-  //     background-color: hsl(var(--secondary));
-  //   }
+  &.ProseMirror:not(.readonly):not(.ProseMirror-hideselection) {
+    // .selection {
+    //   display: inline-block;
+    //   background-color: hsl(var(--secondary));
+    // }
 
-  //   pre ::selection,
-  //   pre .selection {
-  //     display: inline-block;
-  //     background-color: hsla(0, 0%, 100%, 0.2);
-  //   }
-  // }
+    ::selection {
+      // display: inline-block;
+      background-color: oklch(from var(--primary) l c h / 0.2);
+    }
+
+    // pre ::selection,
+    // pre .selection {
+    //   display: inline-block;
+    //   background-color: hsla(0, 0%, 100%, 0.2);
+    // }
+  }
 
   &.ProseMirror img {
     transition: filter 0.1s ease-in-out;
@@ -207,6 +213,24 @@
     &.ProseMirror-selectednode {
       filter: brightness(90%);
     }
+  }
+
+  &.ProseMirror th, td {
+    position: relative;
+  }
+
+  &.ProseMirror .column-resize-handle {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: calc(100% + 2px);
+    width: 3px;
+    margin-inline-start: -1px;
+    margin-top: -1px;
+    background-color: var(--primary);
+    cursor: col-resize;
+    z-index: 1;
+    pointer-events: auto;
   }
 
   img {

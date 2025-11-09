@@ -82,7 +82,9 @@ export const Ai = Extension.create<AiOptions, AiStorage>({
 
               if (insert) {
                 const range = editor.$pos(insert.from).range;
-                cm.deleteRange(range).insertContentAt(insert.from, completion);
+                cm.deleteRange(range).insertContentAt(insert.from, completion, {
+                  contentType: "markdown",
+                });
               }
 
               cm.run();

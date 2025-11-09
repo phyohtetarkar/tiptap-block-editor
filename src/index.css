@@ -124,7 +124,7 @@
 
 @layer base {
   * {
-    @apply border-border;
+    @apply border-border outline-0;
   }
   body {
     @apply bg-background text-foreground font-inter;

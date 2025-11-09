@@ -44,11 +44,8 @@ VITE_GOOGLE_GENERATIVE_AI_API_KEY= # Your Gemini API Key
 ```
 
 ## Run locally
-
-Use --legacy-peer-deps flag because still relies on [Markdown](https://github.com/aguingand/tiptap-markdown) extension which depends on Tiptap v2.
-
 ```bash
-npm install --legacy-peer-deps
+npm install
 npm run dev
 ```
 
