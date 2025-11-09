@@ -21,11 +21,14 @@ export const Mathematics = Node.create<MathematicsOptions>({
   name: "math",
   inline: true,
   group: "inline",
-  atom: true,
+  atom: false,
+  content: "text*",
 
   addAttributes() {
     return {
-      latex: "",
+      "data-content-type": {
+        default: this.name,
+      },
     };
   },
 
@@ -64,28 +67,35 @@ export const Mathematics = Node.create<MathematicsOptions>({
             return false;
           }
 
+          // const content = `<span data-content-type="${this.name}">${latex}</span>`;
+
           return chain()
             .insertContentAt(
               { from: from, to: to },
               {
                 type: this.name,
-                attrs: {
-                  latex: latex,
-                },
+                content: [
+                  {
+                    type: "text",
+                    text: latex,
+                  },
+                ],
               }
             )
-            .setTextSelection({ from: from, to: from + 1 })
+            .setTextSelection({ from: from, to: to + 2 })
             .run();
         },
       unsetLatex:
         () =>
-        ({ editor, state, chain }) => {
-          const latex = editor.getAttributes(this.name).latex;
-          if (typeof latex !== "string") {
+        ({ state, chain }) => {
+          const { from, to } = state.selection;
+
+          const node = state.doc.nodeAt(from);
+          if (!node || node.type.name !== this.name) {
             return false;
           }
 
-          const { from, to } = state.selection;
+          const latex = node.textContent;
 
           return chain()
             .command(({ tr }) => {
@@ -102,41 +112,27 @@ export const Mathematics = Node.create<MathematicsOptions>({
   },
 
   parseHTML() {
-    return [{ tag: `span[data-type="${this.name}"]` }];
+    return [{ tag: `span[data-content-type="${this.name}"]` }];
   },
 
   renderHTML({ HTMLAttributes }) {
-    // const latex = node.attrs["latex"] ?? "";
-    // const dom = document.createElement("span");
-
-    // Object.entries(HTMLAttributes).forEach(([key, value]) => {
-    //   dom.setAttribute(key, value);
-    // });
-
-    // dom.setAttribute("data-type", this.name);
-
-    // dom.innerHTML = katex.renderToString(latex, this.options.katexOptions);
-
-    // return {
-    //   dom: dom,
-    // };
-
     return [
       "span",
-      mergeAttributes(HTMLAttributes, {
-        "data-type": this.name,
+      mergeAttributes(this.options.HTMLAttributes, HTMLAttributes, {
+        "data-content-type": this.name,
       }),
+      0,
     ];
   },
 
   renderText({ node }) {
-    return node.attrs["latex"] ?? "";
+    return node.textContent ?? "";
   },
 
   addNodeView() {
     return ({ node, HTMLAttributes, getPos, editor }) => {
       const dom = document.createElement("span");
-      const latex: string = node.attrs["latex"] ?? "";
+      const latex = node.textContent ?? "";
 
       Object.entries(this.options.HTMLAttributes).forEach(([key, value]) => {
         dom.setAttribute(key, value);

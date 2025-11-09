@@ -60,8 +60,8 @@ const ContentRenderer = ({ html }: { html?: string }) => {
       hljs.highlightElement(el as any);
     });
 
-    element.querySelectorAll('[data-type="math"]').forEach((el) => {
-      const latex = el.getAttribute("latex");
+    element.querySelectorAll('[data-content-type="math"]').forEach((el) => {
+      const latex = el.textContent;
       if (!latex) {
         return;
       }
