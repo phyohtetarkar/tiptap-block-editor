@@ -41,7 +41,10 @@ const CodeTextarea = ({
         {Array.from({ length: lineCount }, (_, i) => (
           <div
             key={i}
-            className="text-end font-mono text-sm text-muted-foreground"
+            className="text-end font-mono text-[14px] text-muted-foreground"
+            style={{
+              lineHeight: 1.5,
+            }}
           >
             {i + 1}
           </div>
@@ -56,13 +59,14 @@ const CodeTextarea = ({
       </div>
       <Textarea
         id="mermaid-code"
-        className="rounded-s-none border-s-0 resize-none"
+        className="rounded-s-none border-s-0 resize-none font-mono text-[14px]"
         placeholder="Enter mermaid code"
         value={code}
         wrap="off"
         spellCheck="false"
         style={{
           height: height,
+          lineHeight: 1.5,
         }}
         onChange={(evt) => {
           setCode(evt.target.value);
