@@ -15,6 +15,7 @@ import { CustomCodeBlock } from "./extensions/code-block";
 import { Mathematics } from "./extensions/mathematics";
 import { CustomTable } from "./extensions/table";
 import { Markdown } from "@tiptap/markdown";
+import { Mermaid } from "./extensions/mermaid";
 
 const TiptapStarterKit = StarterKit.configure({
   bulletList: {
@@ -189,6 +190,12 @@ const TiptapYoutube = Youtube.configure({
 
 const TiptapCharacterCount = CharacterCount;
 
+const mermaid = Mermaid.configure({
+  HTMLAttributes: {
+    class: cn("flex items-center justify-center p-4 bg-white"),
+  },
+});
+
 // const selection = Selection.configure({
 //   HTMLAttributes: {
 //     class: "selection",
@@ -212,4 +219,5 @@ export const defaultExtensions = [
   aiPlaceholder,
   aiWriter,
   TipTapMarkdown,
+  mermaid,
 ];

@@ -1,4 +1,4 @@
-import { mergeAttributes, Node } from "@tiptap/core";
+import { Node } from "@tiptap/core";
 import { ReactNodeViewRenderer } from "@tiptap/react";
 import AiWriterView from "./ai-writer-view";
 
@@ -17,8 +17,8 @@ declare module "@tiptap/core" {
 export const AiWriter = Node.create<AiWriterOptions>({
   name: "aiWriter",
   group: "block",
-  draggable: true,
   marks: "",
+  atom: true,
 
   addOptions() {
     return {
@@ -48,11 +48,8 @@ export const AiWriter = Node.create<AiWriterOptions>({
     };
   },
 
-  renderHTML({ HTMLAttributes }) {
-    return [
-      "div",
-      mergeAttributes(this.options.HTMLAttributes, HTMLAttributes),
-    ];
+  renderHTML() {
+    return ["div"];
   },
 
   addNodeView() {

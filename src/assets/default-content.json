@@ -197,6 +197,38 @@
       "content": [
         {
           "type": "text",
+          "text": "Mermaid diagram"
+        }
+      ]
+    },
+    {
+      "type": "mermaid",
+      "attrs": {
+        "textAlign": null,
+        "data-content-type": "mermaid"
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "sequenceDiagram\n    autonumber\n    Alice->>John: Hello John, how are you?\n    loop HealthCheck\n        John->>John: Fight against hypochondria\n    end\n    Note right of John: Rational thoughts!\n    John-->>Alice: Great!\n    John->>Bob: How about you?\n    Bob-->>John: Jolly good!"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "attrs": {
+        "textAlign": null
+      }
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "textAlign": null,
+        "level": 3
+      },
+      "content": [
+        {
+          "type": "text",
           "text": "Mathematical symbols with "
         },
         {

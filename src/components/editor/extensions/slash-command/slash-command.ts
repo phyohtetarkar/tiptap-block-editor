@@ -5,6 +5,7 @@ import Suggestion, { SuggestionOptions } from "@tiptap/suggestion";
 type OnCommandSelect = (props: { editor: Editor; range: Range }) => void;
 
 export interface SuggestionItem {
+  id: string;
   title: string;
   description: string;
   keywords: string[];

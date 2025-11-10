@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import { cva, type VariantProps } from "class-variance-authority";
 
-const alertVariants = cva("rounded p-3 border", {
+const alertVariants = cva("rounded p-3 border text-sm", {
   variants: {
     variant: {
       primary: "bg-primary/15 border-primary/15 text-primary",

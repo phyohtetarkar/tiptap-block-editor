@@ -23,6 +23,7 @@ export const Mathematics = Node.create<MathematicsOptions>({
   group: "inline",
   atom: false,
   content: "text*",
+  marks: "",
 
   addAttributes() {
     return {

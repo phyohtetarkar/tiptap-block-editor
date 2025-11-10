@@ -10,6 +10,7 @@ import {
   LetterTextIcon,
   ListIcon,
   ListOrderedIcon,
+  ShapesIcon,
   SparklesIcon,
   SquarePlayIcon,
   TableIcon,
@@ -29,6 +30,7 @@ type SuggestionType = Omit<
 
 const list: CommandSuggestionItem[] = [
   {
+    id: "text",
     title: "Text",
     description: "Just start typing with plain text.",
     keywords: ["p", "paragraph"],
@@ -43,6 +45,7 @@ const list: CommandSuggestionItem[] = [
     },
   },
   {
+    id: "h1",
     title: "Heading 1",
     description: "Big section heading.",
     keywords: ["title", "big", "large", "heading"],
@@ -57,6 +60,7 @@ const list: CommandSuggestionItem[] = [
     },
   },
   {
+    id: "h2",
     title: "Heading 2",
     description: "Medium section heading.",
     keywords: ["subtitle", "medium", "heading"],
@@ -71,6 +75,7 @@ const list: CommandSuggestionItem[] = [
     },
   },
   {
+    id: "h3",
     title: "Heading 3",
     description: "Small section heading.",
     keywords: ["subtitle", "small", "heading"],
@@ -85,6 +90,7 @@ const list: CommandSuggestionItem[] = [
     },
   },
   {
+    id: "ul",
     title: "Bullet List",
     description: "Create a simple bullet list.",
     keywords: ["unordered", "list", "bullet"],
@@ -94,6 +100,7 @@ const list: CommandSuggestionItem[] = [
     },
   },
   {
+    id: "ol",
     title: "Numbered List",
     description: "Create a list with numbering.",
     keywords: ["ordered", "list"],
@@ -103,6 +110,7 @@ const list: CommandSuggestionItem[] = [
     },
   },
   {
+    id: "blockquote",
     title: "Quote",
     description: "Capture a quote.",
     keywords: ["blockquote"],
@@ -117,6 +125,7 @@ const list: CommandSuggestionItem[] = [
         .run(),
   },
   {
+    id: "codeBlock",
     title: "Code",
     description: "Capture a code snippet.",
     keywords: ["codeblock"],
@@ -130,6 +139,7 @@ const list: CommandSuggestionItem[] = [
         .run(),
   },
   {
+    id: "table",
     title: "Table",
     description: "Capture a table.",
     keywords: ["table"],
@@ -138,6 +148,15 @@ const list: CommandSuggestionItem[] = [
       editor.chain().focus().deleteRange(range).insertTable().run(),
   },
   {
+    id: "mermaid",
+    title: "Mermaid",
+    description: "Render a mermaid diagram.",
+    keywords: ["mermaid", "diagram", "chart"],
+    icon: ShapesIcon,
+    command: () => {},
+  },
+  {
+    id: "youtube",
     title: "Youtube",
     description: "Embed a Youtube video.",
     keywords: ["youtube"],
@@ -166,6 +185,7 @@ const list: CommandSuggestionItem[] = [
     },
   },
   {
+    id: "divider",
     title: "Divider",
     description: "Create a horizontal divider.",
     keywords: ["divider"],
@@ -177,6 +197,7 @@ const list: CommandSuggestionItem[] = [
 
 const withAiList: CommandSuggestionItem[] = [
   {
+    id: "aiWriter",
     title: "AI Writer",
     description: "Ask AI with custom prompt.",
     keywords: ["ai"],

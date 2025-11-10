@@ -118,6 +118,12 @@
   transition: outline 0.15s;
   outline: 3px solid var(--primary);
 }
+.tiptap .mermaid {
+  margin-top: 1.25rem;
+  margin-bottom: 1.25rem;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
 .tiptap.ProseMirror-hideselection ::selection {
   background-color: transparent;
 }
@@ -134,7 +140,8 @@
 .tiptap.ProseMirror img.ProseMirror-selectednode {
   filter: brightness(90%);
 }
-.tiptap.ProseMirror th, .tiptap td {
+.tiptap.ProseMirror th,
+.tiptap td {
   position: relative;
 }
 .tiptap.ProseMirror .column-resize-handle {

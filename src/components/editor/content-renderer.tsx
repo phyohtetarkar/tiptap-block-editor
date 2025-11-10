@@ -3,6 +3,7 @@ import type { HLJSPlugin } from "highlight.js";
 import hljs from "highlight.js/lib/common";
 import katex from "katex";
 import { useEffect, useState } from "react";
+import mermaid from "mermaid";
 
 const hljsCopyButtonPlugin: HLJSPlugin = {
   "after:highlightElement"({ el, text }) {
@@ -68,6 +69,11 @@ const ContentRenderer = ({ html }: { html?: string }) => {
       el.innerHTML = katex.renderToString(latex, {
         throwOnError: false,
       });
+    });
+
+    mermaid.run({
+      nodes: element.querySelectorAll(".mermaid"),
+      suppressErrors: true,
     });
   }, [element]);
 
