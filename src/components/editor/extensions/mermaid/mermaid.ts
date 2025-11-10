@@ -100,15 +100,9 @@ export const Mermaid = Node.create<MermaidOptions>({
     return [
       "div",
       mergeAttributes(this.options.HTMLAttributes, HTMLAttributes, {
-        class: cn("border my-4"),
+        class: cn("border my-4 w-full"),
       }),
-      [
-        "div",
-        {
-          class: cn("mermaid w-full"),
-        },
-        0,
-      ],
+      0,
     ];
   },
 
@@ -122,56 +116,5 @@ export const Mermaid = Node.create<MermaidOptions>({
       },
     });
   },
-
-  //   addNodeView() {
-  //     return ({ node, HTMLAttributes, getPos, editor }) => {
-  //       const dom = document.createElement("div");
-  //       const code = node.textContent ?? "";
-
-  //       Object.entries(this.options.HTMLAttributes).forEach(([key, value]) => {
-  //         dom.setAttribute(key, value);
-  //       });
-
-  //       Object.entries(HTMLAttributes).forEach(([key, value]) => {
-  //         dom.setAttribute(key, value);
-  //       });
-
-  //       dom.textContent = "Rendering mermaid...";
-
-  //       const uuid = crypto.randomUUID();
-
-  //       const container = document.createElement("div");
-  //       container.id = uuid;
-
-  //       dom.appendChild(container);
-  //       mermaid
-  //         .render(uuid, code)
-  //         .then((result) => {
-  //           dom.textContent = "";
-  //           container.innerHTML = result.svg;
-  //           console.log(result);
-  //         })
-  //         .catch((e) => {
-  //           console.error(e);
-  //           const pos = getPos();
-  //           if (pos !== undefined) {
-  //             editor
-  //               .chain()
-  //               .focus()
-  //               .command(({ tr }) => {
-  //                 tr.delete(pos, node.nodeSize);
-  //                 return true;
-  //               })
-  //               .run();
-  //           }
-
-  //           alert("Invalid mermaid code!");
-  //         });
-
-  //       return {
-  //         dom: dom,
-  //         ignoreMutation: () => true,
-  //       };
-  //     };
-  //   },
+  
 });

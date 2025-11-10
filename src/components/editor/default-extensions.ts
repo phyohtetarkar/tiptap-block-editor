@@ -192,7 +192,7 @@ const TiptapCharacterCount = CharacterCount;
 
 const mermaid = Mermaid.configure({
   HTMLAttributes: {
-    class: cn("flex items-center justify-center p-4 bg-white"),
+    class: cn("mermaid p-4 bg-white"),
   },
 });
 

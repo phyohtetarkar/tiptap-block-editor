@@ -181,8 +181,11 @@
   .mermaid {
     margin-top: 1.25rem;
     margin-bottom: 1.25rem;
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
+
+    svg {
+      margin-left: auto;
+      margin-right: auto;
+    }
   }
 
   &.ProseMirror-hideselection {
