@@ -9,7 +9,7 @@ import { defaultExtensions } from "./default-extensions";
 import { Ai } from "./extensions/ai";
 import { getSuggestion, SlashCommand } from "./extensions/slash-command";
 import { DefaultBubbleMenu } from "./menus/default-bubble-menu";
-import { TableOptionsMenu } from "./menus/table-options-menu";
+import { TableHandle } from "./menus/table-options-menu";
 
 interface BlockEditorProps {
   content?: Content;
@@ -50,6 +50,7 @@ const BlockEditor = ({
     editorProps: {
       attributes: {
         spellcheck: "false",
+        class: cn("!pl-10"),
       },
     },
     onCreate: ({ editor }) => {
@@ -57,6 +58,7 @@ const BlockEditor = ({
     },
     onUpdate: ({ editor }) => {
       onUpdate?.(editor);
+      // console.log(editor.getHTML());
     },
     onContentError: ({ error }) => {
       console.error(error);
@@ -68,7 +70,7 @@ const BlockEditor = ({
       <DragHandle
         editor={editor}
         computePositionConfig={{
-          middleware: [offset(8)],
+          middleware: [offset(20)],
         }}
       >
         <GripVerticalIcon className="text-muted-foreground" />
@@ -77,7 +79,7 @@ const BlockEditor = ({
         editor={editor}
         className="prose dark:prose-invert focus:outline-none max-w-full z-0"
       />
-      <TableOptionsMenu editor={editor} />
+      <TableHandle editor={editor} />
       <DefaultBubbleMenu editor={editor} showAiTools={true} />
     </>
   );

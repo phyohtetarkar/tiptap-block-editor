@@ -103,6 +103,12 @@
       ]
     },
     {
+      "type": "paragraph",
+      "attrs": {
+        "textAlign": null
+      }
+    },
+    {
       "type": "heading",
       "attrs": {
         "textAlign": null,
@@ -191,7 +197,56 @@
       "content": [
         {
           "type": "text",
-          "text": "Mathematical symbols with LaTeX expression"
+          "text": "Mermaid diagram"
+        }
+      ]
+    },
+    {
+      "type": "mermaid",
+      "attrs": {
+        "textAlign": null,
+        "data-content-type": "mermaid"
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "sequenceDiagram\n    autonumber\n    Alice->>John: Hello John, how are you?\n    loop HealthCheck\n        John->>John: Fight against hypochondria\n    end\n    Note right of John: Rational thoughts!\n    John-->>Alice: Great!\n    John->>Bob: How about you?\n    Bob-->>John: Jolly good!"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "attrs": {
+        "textAlign": null
+      }
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "textAlign": null,
+        "level": 3
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Mathematical symbols with "
+        },
+        {
+          "type": "math",
+          "attrs": {
+            "textAlign": null,
+            "data-content-type": "math"
+          },
+          "content": [
+            {
+              "type": "text",
+              "text": "\\LaTeX"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "text": " expression"
         }
       ]
     },
@@ -213,10 +268,12 @@
               "content": [
                 {
                   "type": "math",
-                  "attrs": {
-                    "textAlign": null,
-                    "latex": "E = mc^2"
-                  }
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "E = mc^2"
+                    }
+                  ]
                 }
               ]
             }
@@ -233,10 +290,12 @@
               "content": [
                 {
                   "type": "math",
-                  "attrs": {
-                    "textAlign": null,
-                    "latex": "a^2 = \\sqrt{b^2 + c^2}"
-                  }
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "a^2 = \\sqrt{b^2 + c^2}"
+                    }
+                  ]
                 }
               ]
             }
@@ -253,10 +312,12 @@
               "content": [
                 {
                   "type": "math",
-                  "attrs": {
-                    "textAlign": null,
-                    "latex": "\\hat{f} (\\xi)=\\int_{-\\infty}^{\\infty}f(x)e^{-2\\pi ix\\xi}dx"
-                  }
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "\\hat{f} (\\xi)=\\int_{-\\infty}^{\\infty}f(x)e^{-2\\pi ix\\xi}dx"
+                    }
+                  ]
                 }
               ]
             }
@@ -273,10 +334,12 @@
               "content": [
                 {
                   "type": "math",
-                  "attrs": {
-                    "textAlign": null,
-                    "latex": "A=\\begin{bmatrix}a&b\\\\c&d \\end{bmatrix}"
-                  }
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "A=\\begin{bmatrix}a&b\\\\c&d \\end{bmatrix}"
+                    }
+                  ]
                 }
               ]
             }
@@ -293,10 +356,12 @@
               "content": [
                 {
                   "type": "math",
-                  "attrs": {
-                    "textAlign": null,
-                    "latex": "\\sum_{i=0}^n x_i"
-                  }
+                  "content": [
+                    {
+                      "type": "text",
+                      "text": "\\sum_{i=0}^n x_i"
+                    }
+                  ]
                 }
               ]
             }

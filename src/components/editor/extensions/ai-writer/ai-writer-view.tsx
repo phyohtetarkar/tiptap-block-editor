@@ -44,7 +44,13 @@ const AiWriterView = ({ editor, node, getPos }: NodeViewProps) => {
     }
     const to = from + node.nodeSize;
 
-    editor.chain().focus().insertContentAt({ from, to }, message).run();
+    editor
+      .chain()
+      .focus()
+      .insertContentAt({ from, to }, message, {
+        contentType: "markdown",
+      })
+      .run();
   };
 
   const remove = () => {
@@ -61,7 +67,7 @@ const AiWriterView = ({ editor, node, getPos }: NodeViewProps) => {
 
   return (
     <NodeViewWrapper>
-      <div className="ai-writer flex flex-col py-4 px-5 rounded-md border bg-card not-draggable select-none">
+      <div className="ai-writer flex flex-col py-4 px-5 rounded-md border bg-card">
         {error && (
           <Alert variant="destructive" className="mb-4">
             {error.message}
@@ -70,9 +76,18 @@ const AiWriterView = ({ editor, node, getPos }: NodeViewProps) => {
 
         {!error && !!message && (
           <>
-            <label className="mb-1 font-medium text-foreground">Preview</label>
+            <div className="mb-1 font-medium text-foreground">Preview</div>
             <div className="flex max-h-80">
-              <ScrollArea className="prose dark:prose-invert prose-headings:mt-0 max-w-full mb-6 prose-pre:rounded-md prose-pre:bg-gray-800 dark:prose-pre:bg-gray-900">
+              <ScrollArea
+                // contentEditable={"true"}
+                // onKeyDown={(e) => {
+                //   const meta = e.metaKey || e.ctrlKey;
+                //   if (meta && e.key.toLowerCase() === "c") return;
+                //   if (meta && e.key.toLowerCase() === "a") return;
+                //   e.preventDefault();
+                // }}
+                className="prose dark:prose-invert prose-headings:mt-0 max-w-full mb-6 prose-pre:rounded-md prose-pre:bg-gray-800 dark:prose-pre:bg-gray-900 caret-transparent"
+              >
                 <Markdown>{message}</Markdown>
               </ScrollArea>
             </div>

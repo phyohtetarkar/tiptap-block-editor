@@ -3,6 +3,8 @@ import * as PopoverPrimitive from "@radix-ui/react-popover";
 
 import { cn } from "@/lib/utils";
 
+type PortalProps = React.ComponentProps<typeof PopoverPrimitive.Portal>;
+
 function Popover({
   ...props
 }: React.ComponentProps<typeof PopoverPrimitive.Root>) {
@@ -20,9 +22,11 @@ function PopoverContent({
   align = "center",
   sideOffset = 4,
   noPortal,
+  portalProps,
   ...props
 }: React.ComponentProps<typeof PopoverPrimitive.Content> & {
   noPortal?: boolean;
+  portalProps?: PortalProps;
 }) {
   const content = (
     <PopoverPrimitive.Content
@@ -40,7 +44,7 @@ function PopoverContent({
   if (noPortal) {
     return content;
   }
-  return <PopoverPrimitive.Portal>{content}</PopoverPrimitive.Portal>;
+  return <PopoverPrimitive.Portal {...portalProps}>{content}</PopoverPrimitive.Portal>;
 }
 
 function PopoverAnchor({

@@ -3,6 +3,7 @@ import type { HLJSPlugin } from "highlight.js";
 import hljs from "highlight.js/lib/common";
 import katex from "katex";
 import { useEffect, useState } from "react";
+import mermaid from "mermaid";
 
 const hljsCopyButtonPlugin: HLJSPlugin = {
   "after:highlightElement"({ el, text }) {
@@ -60,14 +61,19 @@ const ContentRenderer = ({ html }: { html?: string }) => {
       hljs.highlightElement(el as any);
     });
 
-    element.querySelectorAll('[data-type="math"]').forEach((el) => {
-      const latex = el.getAttribute("latex");
+    element.querySelectorAll('[data-content-type="math"]').forEach((el) => {
+      const latex = el.textContent;
       if (!latex) {
         return;
       }
       el.innerHTML = katex.renderToString(latex, {
         throwOnError: false,
       });
+    });
+
+    mermaid.run({
+      nodes: element.querySelectorAll(".mermaid"),
+      suppressErrors: true,
     });
   }, [element]);
 
