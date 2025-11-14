@@ -104,6 +104,8 @@ const codeBlock = CustomCodeBlock.configure({
     ),
     spellcheck: false,
   },
+  enableTabIndentation: true,
+  tabSize: 2,
   defaultLanguage: "plaintext",
   lowlight: lowlight,
 });

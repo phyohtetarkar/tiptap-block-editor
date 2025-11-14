@@ -169,7 +169,7 @@ const CodeBlockView = ({
         </div>
         <pre className={cn("not-prose p-3 ps-0")}>
           <code className={language ? languageClassPrefix + language : null}>
-            <NodeViewContent className="!text-nowrap" />
+            <NodeViewContent className="!text-nowrap min-w-1" />
           </code>
         </pre>
       </div>
