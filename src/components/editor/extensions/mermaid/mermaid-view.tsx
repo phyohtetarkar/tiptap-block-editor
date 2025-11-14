@@ -62,7 +62,7 @@ export function MermaidView({
         <Button
           variant="secondary"
           size="icon"
-          className="opacity-40 hover:opacity-100 size-8 !bg-zinc-300 !text-zinc-700"
+          className="opacity-40 hover:opacity-100 size-7 !bg-zinc-300 !text-zinc-700"
           onClick={() => setOpenMermaidInputDialog(true)}
         >
           <EditIcon />
@@ -70,7 +70,7 @@ export function MermaidView({
         <Button
           variant="destructive"
           size="icon"
-          className="opacity-40 hover:opacity-100 size-8 !bg-red-600"
+          className="opacity-40 hover:opacity-100 size-7 !bg-red-600"
           onClick={deleteNode}
         >
           <Trash2Icon />

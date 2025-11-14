@@ -22,7 +22,7 @@ export const Mermaid = Node.create<MermaidOptions>({
   group: "block",
   content: "text*",
   marks: "",
-  atom: false,
+  atom: true,
   draggable: true,
   allowGapCursor: true,
 
@@ -108,7 +108,7 @@ export const Mermaid = Node.create<MermaidOptions>({
 
   addNodeView() {
     return ReactNodeViewRenderer(MermaidView, {
-      className: cn("relative border my-4"),
+      className: cn("relative border my-4 bg-white"),
       attrs: () => {
         return {
           contentEditable: "false",

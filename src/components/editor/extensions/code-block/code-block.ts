@@ -1,5 +1,5 @@
 import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
-import { mergeAttributes, ReactNodeViewRenderer } from "@tiptap/react";
+import { ReactNodeViewRenderer } from "@tiptap/react";
 import CodeBlockView from "./code-block-view";
 
 export const CustomCodeBlock = CodeBlockLowlight.extend({
@@ -23,8 +23,7 @@ export const CustomCodeBlock = CodeBlockLowlight.extend({
 
   addNodeView() {
     return ReactNodeViewRenderer(CodeBlockView, {
-      as: "pre",
-      attrs: mergeAttributes(this.options.HTMLAttributes),
+      className: "my-6"
     });
   },
 });

@@ -21,7 +21,7 @@ export const Mathematics = Node.create<MathematicsOptions>({
   name: "math",
   inline: true,
   group: "inline",
-  atom: false,
+  atom: true,
   content: "text*",
   marks: "",
 
