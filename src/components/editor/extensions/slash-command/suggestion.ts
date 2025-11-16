@@ -2,6 +2,7 @@ import { computePosition, flip, shift } from "@floating-ui/dom";
 import { Editor, posToDOMRect, ReactRenderer } from "@tiptap/react";
 import { SuggestionOptions } from "@tiptap/suggestion";
 import {
+  ChartPieIcon,
   CodeIcon,
   DivideIcon,
   Heading1Icon,
@@ -151,8 +152,16 @@ const list: CommandSuggestionItem[] = [
     id: "mermaid",
     title: "Mermaid",
     description: "Render a mermaid diagram.",
-    keywords: ["mermaid", "diagram", "chart"],
+    keywords: ["mermaid", "diagram"],
     icon: ShapesIcon,
+    command: () => {},
+  },
+  {
+    id: "chart",
+    title: "Chart",
+    description: "Render a chart.",
+    keywords: ["chart"],
+    icon: ChartPieIcon,
     command: () => {},
   },
   {

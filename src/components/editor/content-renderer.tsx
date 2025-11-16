@@ -2,8 +2,10 @@ import { cn } from "@/lib/utils";
 import type { HLJSPlugin } from "highlight.js";
 import hljs from "highlight.js/lib/common";
 import katex from "katex";
-import { useEffect, useState } from "react";
 import mermaid from "mermaid";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
+import { ChartData, ChartRenderer, parseChartData } from "./extensions/chart";
 
 const hljsCopyButtonPlugin: HLJSPlugin = {
   "after:highlightElement"({ el, text }) {
@@ -46,6 +48,51 @@ const hljsCopyButtonPlugin: HLJSPlugin = {
   },
 };
 
+const ChartComponents = ({ root }: { root: HTMLElement | null }) => {
+  const [chartNodes, setChartNodes] = useState<
+    { element: Element; data: ChartData }[]
+  >([]);
+
+  useEffect(() => {
+    if (!root) {
+      return;
+    }
+
+    const elements = Array.from(root.querySelectorAll(".chart"));
+
+    const list: typeof chartNodes = [];
+
+    for (const element of elements) {
+      const value = element.textContent;
+      if (!value) {
+        continue;
+      }
+
+      const parsed = JSON.parse(value);
+      const result = parseChartData(parsed);
+      if (!result.success) {
+        continue;
+      }
+
+      element.textContent = "";
+      element.removeAttribute("data-processed");
+      element.setAttribute("data-processed", "true");
+
+      list.push({ element, data: result.data });
+    }
+
+    setChartNodes(list);
+  }, [root]);
+
+  if (!root) {
+    return null;
+  }
+
+  return chartNodes.map(({ data, element }, i) => {
+    return createPortal(<ChartRenderer chartData={data} />, element, i);
+  });
+};
+
 const ContentRenderer = ({ html }: { html?: string }) => {
   const [element, setElement] = useState<HTMLElement | null>(null);
 
@@ -78,11 +125,15 @@ const ContentRenderer = ({ html }: { html?: string }) => {
   }, [element]);
 
   return (
-    <article
-      ref={setElement}
-      className="tiptap prose dark:prose-invert focus:outline-none max-w-full"
-      dangerouslySetInnerHTML={{ __html: html ?? "" }}
-    />
+    <>
+      <article
+        ref={setElement}
+        className="tiptap prose dark:prose-invert focus:outline-none max-w-full"
+        dangerouslySetInnerHTML={{ __html: html ?? "" }}
+      />
+
+      <ChartComponents root={element} />
+    </>
   );
 };
 

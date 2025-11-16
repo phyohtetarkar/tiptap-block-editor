@@ -4,6 +4,7 @@ import { SuggestionKeyDownProps, SuggestionProps } from "@tiptap/suggestion";
 import { LucideIcon } from "lucide-react";
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import { MermaidInputDialog } from "../mermaid";
+import { ChartEditDialog } from "../chart";
 
 export interface CommandSuggestionItem extends SuggestionItem {
   icon: LucideIcon;
@@ -22,6 +23,7 @@ const SuggestionList = forwardRef<SuggestionListHandle, SuggestionListProps>(
   (props, ref) => {
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [openMermaidInputDialog, setOpenMermaidInputDialog] = useState(false);
+    const [openChartEditDialog, setOpenChartEditDialog] = useState(false);
 
     const selectItem = (index: number) => {
       const item = props.items[index];
@@ -31,6 +33,11 @@ const SuggestionList = forwardRef<SuggestionListHandle, SuggestionListProps>(
 
       if (item.id === "mermaid") {
         setOpenMermaidInputDialog(true);
+        return;
+      }
+
+      if (item.id === "chart") {
+        setOpenChartEditDialog(true);
         return;
       }
 
@@ -95,6 +102,11 @@ const SuggestionList = forwardRef<SuggestionListHandle, SuggestionListProps>(
                       return;
                     }
 
+                    if (item.id === "chart") {
+                      setOpenChartEditDialog(true);
+                      return;
+                    }
+
                     props.command(item);
                   }}
                 >
@@ -131,6 +143,24 @@ const SuggestionList = forwardRef<SuggestionListHandle, SuggestionListProps>(
               },
             });
             setOpenMermaidInputDialog(false);
+          }}
+        />
+
+        <ChartEditDialog
+          isOpen={openChartEditDialog}
+          onOpenChange={setOpenChartEditDialog}
+          onInsert={(data) => {
+            props.command({
+              command: ({ editor, range }) => {
+                editor
+                  .chain()
+                  .focus()
+                  .deleteRange(range)
+                  .setChart({ data })
+                  .run();
+              },
+            });
+            setOpenChartEditDialog(false);
           }}
         />
       </>
