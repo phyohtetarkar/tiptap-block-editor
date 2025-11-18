@@ -1,22 +1,14 @@
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import { NodeViewWrapper, ReactNodeViewProps } from "@tiptap/react";
+import { useCallback, useEffect, useState } from "react";
+import { ChartRenderer } from "./chart-renderer";
+import { ChartData, parseChartData } from "./common";
+import { ChartEditDialog } from "./chart-edit-dialog";
+import { Button } from "@/components/ui/button";
 import { EditIcon, Trash2Icon } from "lucide-react";
-import mermaid from "mermaid";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { MermaidInputDialog } from "./mermaid-input-dialog";
 
-export function MermaidView({
-  editor,
-  getPos,
-  node,
-  HTMLAttributes,
-  extension,
-}: ReactNodeViewProps) {
-  const containerRef = useRef<HTMLDivElement | null>(null);
-  const [openMermaidInputDialog, setOpenMermaidInputDialog] = useState(false);
-
-  const { options } = extension;
+export function ChartView({ editor, getPos, node }: ReactNodeViewProps) {
+  const [chartData, setChartData] = useState<ChartData>();
+  const [openChartEditDialog, setOpenChartEditDialog] = useState(false);
 
   const deleteNode = useCallback(() => {
     const pos = getPos();
@@ -34,12 +26,15 @@ export function MermaidView({
       .run();
   }, [editor, getPos, node.nodeSize]);
 
-  const renderDiagram = useCallback(async () => {
+  const renderChart = useCallback(async () => {
     try {
-      const id = "m-" + crypto.randomUUID();
-      const result = await mermaid.render(id, node.textContent);
-      if (containerRef.current) {
-        containerRef.current.innerHTML = result.svg;
+      const parsed = JSON.parse(node.textContent);
+      const result = parseChartData(parsed);
+      if (result.success) {
+        setChartData(result.data);
+      } else {
+        deleteNode();
+        alert(result.error);
       }
     } catch (error: any) {
       console.error(error.message);
@@ -49,21 +44,20 @@ export function MermaidView({
   }, [node.textContent, deleteNode]);
 
   useEffect(() => {
-    renderDiagram();
-  }, [renderDiagram]);
+    renderChart();
+  }, [renderChart]);
 
   return (
     <NodeViewWrapper>
-      <div
-        ref={containerRef}
-        className={cn(options.HTMLAttributes.class, HTMLAttributes.class)}
-      ></div>
+      <div className="w-full flex justify-center items-center aspect-video">
+        <ChartRenderer chartData={chartData} />
+      </div>
       <div className="absolute flex space-x-2 top-2 right-2">
         <Button
           variant="secondary"
           size="icon"
           className="opacity-40 hover:opacity-100 size-7 !bg-zinc-300 !text-zinc-700"
-          onClick={() => setOpenMermaidInputDialog(true)}
+          onClick={() => setOpenChartEditDialog(true)}
         >
           <EditIcon />
         </Button>
@@ -76,23 +70,23 @@ export function MermaidView({
           <Trash2Icon />
         </Button>
       </div>
-
-      <MermaidInputDialog
+      <ChartEditDialog
         value={node.textContent}
-        isOpen={openMermaidInputDialog}
-        onOpenChange={setOpenMermaidInputDialog}
-        onInsert={(code) => {
+        isOpen={openChartEditDialog}
+        onOpenChange={setOpenChartEditDialog}
+        onInsert={(data) => {
           const pos = getPos();
           if (pos === undefined) {
             return;
           }
+
           editor
             .chain()
             .focus()
             .setNodeSelection(pos)
-            .updateMermaid({ code })
+            .setChart({ data })
             .run();
-          setOpenMermaidInputDialog(false);
+          setOpenChartEditDialog(false);
         }}
       />
     </NodeViewWrapper>

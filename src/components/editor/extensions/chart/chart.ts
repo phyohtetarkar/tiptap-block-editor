@@ -1,24 +1,24 @@
 import { cn } from "@/lib/utils";
 import { mergeAttributes, Node } from "@tiptap/core";
-import { NodeSelection } from "@tiptap/pm/state";
 import { ReactNodeViewRenderer } from "@tiptap/react";
-import { MermaidView } from "./mermaid-view";
+import { ChartView } from "./chart-view";
+import { NodeSelection } from "@tiptap/pm/state";
 
-export interface MermaidOptions {
+export interface ChartOptions {
   HTMLAttributes: Record<string, any>;
 }
 
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {
-    mermaidCommands: {
-      setMermaid: (props: { code: string }) => ReturnType;
-      updateMermaid: (props: { code: string }) => ReturnType;
+    chartCommands: {
+      setChart: (props: { data: string }) => ReturnType;
+      updateChart: (props: { data: string }) => ReturnType;
     };
   }
 }
 
-export const Mermaid = Node.create<MermaidOptions>({
-  name: "mermaid",
+export const Chart = Node.create<ChartOptions>({
+  name: "chart",
   group: "block",
   content: "text*",
   marks: "",
@@ -36,9 +36,9 @@ export const Mermaid = Node.create<MermaidOptions>({
 
   addCommands() {
     return {
-      setMermaid: ({ code }) => {
+      setChart: ({ data }) => {
         return ({ commands }) => {
-          if (!code) {
+          if (!data) {
             return false;
           }
 
@@ -47,15 +47,15 @@ export const Mermaid = Node.create<MermaidOptions>({
             content: [
               {
                 type: "text",
-                text: code,
+                text: data,
               },
             ],
           });
         };
       },
-      updateMermaid: ({ code }) => {
+      updateChart: ({ data }) => {
         return ({ state, commands }) => {
-          if (!code) {
+          if (!data) {
             return false;
           }
 
@@ -78,7 +78,7 @@ export const Mermaid = Node.create<MermaidOptions>({
               content: [
                 {
                   type: "text",
-                  text: code,
+                  text: data,
                 },
               ],
             }
@@ -100,15 +100,15 @@ export const Mermaid = Node.create<MermaidOptions>({
     return [
       "div",
       mergeAttributes(this.options.HTMLAttributes, HTMLAttributes, {
-        class: cn("border my-4 w-full"),
+        class: cn("chart hidden data-[processed=true]:block"),
       }),
       0,
     ];
   },
 
   addNodeView() {
-    return ReactNodeViewRenderer(MermaidView, {
-      className: cn("relative border my-4 bg-white"),
+    return ReactNodeViewRenderer(ChartView, {
+      className: cn("relative border my-4"),
       attrs: () => {
         return {
           contentEditable: "false",
@@ -116,5 +116,4 @@ export const Mermaid = Node.create<MermaidOptions>({
       },
     });
   },
-  
 });

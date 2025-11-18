@@ -669,6 +669,38 @@
       "content": [
         {
           "type": "text",
+          "text": "Chart example (Experimental)"
+        }
+      ]
+    },
+    {
+      "type": "chart",
+      "attrs": {
+        "textAlign": null,
+        "data-content-type": "chart"
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"config\":{\"type\":\"line\",\"labelKey\":\"b0781371-3342-426e-a608-97ffea77ef3f\",\"dataKey\":\"5305eed5-65ad-4a00-8bfa-52bc90834c70\",\"title\":\"Weekly sale\"},\"properties\":[{\"default\":true,\"id\":\"b0781371-3342-426e-a608-97ffea77ef3f\",\"name\":\"Name\",\"type\":\"text\"},{\"id\":\"5305eed5-65ad-4a00-8bfa-52bc90834c70\",\"name\":\"Sale\",\"type\":\"number\"}],\"data\":[{\"b0781371-3342-426e-a608-97ffea77ef3f\":\"Mon\",\"5305eed5-65ad-4a00-8bfa-52bc90834c70\":100},{\"b0781371-3342-426e-a608-97ffea77ef3f\":\"Tue\",\"5305eed5-65ad-4a00-8bfa-52bc90834c70\":120},{\"b0781371-3342-426e-a608-97ffea77ef3f\":\"Wed\",\"5305eed5-65ad-4a00-8bfa-52bc90834c70\":50},{\"b0781371-3342-426e-a608-97ffea77ef3f\":\"Thu\",\"5305eed5-65ad-4a00-8bfa-52bc90834c70\":80},{\"b0781371-3342-426e-a608-97ffea77ef3f\":\"Fri\",\"5305eed5-65ad-4a00-8bfa-52bc90834c70\":150},{\"b0781371-3342-426e-a608-97ffea77ef3f\":\"Sat\",\"5305eed5-65ad-4a00-8bfa-52bc90834c70\":200},{\"b0781371-3342-426e-a608-97ffea77ef3f\":\"Sun\",\"5305eed5-65ad-4a00-8bfa-52bc90834c70\":180}]}"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "attrs": {
+        "textAlign": null
+      }
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "textAlign": null,
+        "level": 3
+      },
+      "content": [
+        {
+          "type": "text",
           "text": "Youtube Embed"
         }
       ]

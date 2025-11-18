@@ -16,6 +16,7 @@ import { Mathematics } from "./extensions/mathematics";
 import { CustomTable } from "./extensions/table";
 import { Markdown } from "@tiptap/markdown";
 import { Mermaid } from "./extensions/mermaid";
+import { Chart } from "./extensions/chart";
 
 const TiptapStarterKit = StarterKit.configure({
   bulletList: {
@@ -104,6 +105,8 @@ const codeBlock = CustomCodeBlock.configure({
     ),
     spellcheck: false,
   },
+  enableTabIndentation: true,
+  tabSize: 2,
   defaultLanguage: "plaintext",
   lowlight: lowlight,
 });
@@ -202,6 +205,12 @@ const mermaid = Mermaid.configure({
 //   },
 // });
 
+const chart = Chart.configure({
+  HTMLAttributes: {
+    class: cn("border my-4 w-full flex items-center justify-center aspect-video"),
+  },
+})
+
 export const defaultExtensions = [
   TiptapStarterKit,
   TiptapHeading,
@@ -220,4 +229,5 @@ export const defaultExtensions = [
   aiWriter,
   TipTapMarkdown,
   mermaid,
+  chart
 ];
