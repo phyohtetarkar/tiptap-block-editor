@@ -158,7 +158,7 @@ const CodeBlockView = ({
         <div
           ref={lineContainerRef}
           className={cn(
-            "h-full bg-gray-800 dark:bg-gray-900 py-3",
+            "h-full bg-gray-800 dark:bg-gray-900 py-3 select-none",
             "sticky left-0 top-0 bottom-0 ps-5 pe-2",
             "text-end font-mono text-gray-400/80"
           )}

@@ -49,7 +49,7 @@ export function ChartView({ editor, getPos, node }: ReactNodeViewProps) {
 
   return (
     <NodeViewWrapper>
-      <div className="w-full flex justify-center items-center aspect-video">
+      <div className="w-full flex justify-center items-center aspect-video p-2">
         <ChartRenderer chartData={chartData} />
       </div>
       <div className="absolute flex space-x-2 top-2 right-2">

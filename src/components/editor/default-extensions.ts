@@ -207,7 +207,7 @@ const mermaid = Mermaid.configure({
 
 const chart = Chart.configure({
   HTMLAttributes: {
-    class: cn("border my-4 w-full flex items-center justify-center aspect-video"),
+    class: cn("border p-2 my-4 w-full flex items-center justify-center aspect-video"),
   },
 })
 
@@ -222,12 +222,12 @@ export const defaultExtensions = [
   TiptapYoutube,
   TiptapCharacterCount,
   TiptapImage,
+  TipTapMarkdown,
   TextStyle,
   mathematics,
   codeBlock,
   aiPlaceholder,
   aiWriter,
-  TipTapMarkdown,
   mermaid,
   chart
 ];
