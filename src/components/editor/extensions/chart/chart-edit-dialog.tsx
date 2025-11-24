@@ -1,4 +1,5 @@
 import { Alert } from "@/components/ui/alert";
+import { AutocompleteDropdown } from "@/components/ui/autocomplete-dropdown";
 import { Button } from "@/components/ui/button";
 import { DatePicker } from "@/components/ui/date-picker";
 import {
@@ -46,9 +47,13 @@ import {
   CheckIcon,
   ChevronDownCircleIcon,
   ChevronDownIcon,
+  CopyIcon,
   HashIcon,
+  HexagonIcon,
   PlusIcon,
+  RadarIcon,
   RefreshCwIcon,
+  TorusIcon,
   Trash2Icon,
 } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -60,9 +65,10 @@ const defaultId = crypto.randomUUID();
 const defaultData: ChartData = {
   config: {
     type: "bar",
+    title: undefined,
     labelKey: defaultId,
     dataKey: undefined,
-    title: undefined,
+    groupKey: undefined,
   },
   properties: [
     {
@@ -74,6 +80,39 @@ const defaultData: ChartData = {
   ],
   data: [],
 } satisfies ChartData;
+
+const chartMenus = [
+  {
+    type: "bar" as ChartConfig["type"],
+    name: "Bar",
+    icon: ChartColumnBigIcon,
+  },
+  {
+    type: "line" as ChartConfig["type"],
+    name: "Line",
+    icon: ChartLineIcon,
+  },
+  {
+    type: "pie" as ChartConfig["type"],
+    name: "Pie",
+    icon: ChartPieIcon,
+  },
+  {
+    type: "doughnut" as ChartConfig["type"],
+    name: "Doughnut",
+    icon: TorusIcon,
+  },
+  {
+    type: "polar" as ChartConfig["type"],
+    name: "Polar area",
+    icon: RadarIcon,
+  },
+  {
+    type: "radar" as ChartConfig["type"],
+    name: "Radar",
+    icon: HexagonIcon,
+  },
+];
 
 type FormType = {
   config: ChartConfig;
@@ -110,6 +149,7 @@ export function ChartEditDialog({
 
   const configWatch = watch("config");
   const dataKeyWatch = watch("config.dataKey");
+  const groupKeyWatch = watch("config.groupKey");
   const propertiesWatch = watch("properties");
 
   const propertiesField = useFieldArray({
@@ -132,6 +172,7 @@ export function ChartEditDialog({
     const result = {
       ...values,
     } satisfies ChartData;
+
     onInsert?.(JSON.stringify(result));
   };
 
@@ -197,6 +238,20 @@ export function ChartEditDialog({
     });
 
     setValue("data", dataCopy);
+
+    const config = getValues("config");
+    if (config.labelKey === property.id) {
+      setValue("config.labelKey", defaultData.config.labelKey);
+    }
+
+    if (config.dataKey === property.id) {
+      setValue("config.dataKey", defaultData.config.dataKey);
+    }
+
+    if (config.groupKey === property.id) {
+      setValue("config.groupKey", defaultData.config.groupKey);
+    }
+
     setColumnMenuIndex(undefined);
   };
 
@@ -209,10 +264,12 @@ export function ChartEditDialog({
     propertiesField.update(index, {
       ...property,
       type,
+      options: undefined,
     });
 
     setValue("config.labelKey", defaultData.config.labelKey);
     setValue("config.dataKey", defaultData.config.dataKey);
+    setValue("config.groupKey", defaultData.config.groupKey);
 
     const dataArray = getValues("data");
     dataArray.forEach((d, i) => {
@@ -225,7 +282,7 @@ export function ChartEditDialog({
       } else {
         dataField.update(i, {
           ...d,
-          [property.id]: value,
+          [property.id]: type !== "select" ? value : undefined,
         });
       }
     });
@@ -241,8 +298,45 @@ export function ChartEditDialog({
     dataField.append(row);
   };
 
+  const duplicateRow = (index: number) => {
+    const isLastRow = index === dataField.fields.length - 1;
+    const copy = {
+      ...getValues("data")[index],
+    };
+    if (isLastRow) {
+      dataField.append(copy);
+    } else {
+      dataField.insert(index + 1, copy);
+    }
+  };
+
   const deleteRow = (index: number) => {
     dataField.remove(index);
+  };
+
+  const renderInsertMenus = (i: number) => {
+    return (
+      <DropdownMenuPortal>
+        <DropdownMenuSubContent>
+          <DropdownMenuLabel className="font-medium">
+            Column type
+          </DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={() => addNextColumn(i, "text")}>
+            Text
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => addNextColumn(i, "number")}>
+            Number
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => addNextColumn(i, "date")}>
+            Date
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => addNextColumn(i, "select")}>
+            Select
+          </DropdownMenuItem>
+        </DropdownMenuSubContent>
+      </DropdownMenuPortal>
+    );
   };
 
   const renderChartIcon = (type?: ChartConfig["type"]) => {
@@ -255,7 +349,33 @@ export function ChartEditDialog({
     if (type === "pie") {
       return <ChartPieIcon className="opacity-60" />;
     }
+    if (type === "doughnut") {
+      return <TorusIcon className="opacity-60" />;
+    }
+    if (type === "polar") {
+      return <RadarIcon className="opacity-60" />;
+    }
+    if (type === "radar") {
+      return <HexagonIcon className="opacity-60" />;
+    }
     return null;
+  };
+
+  const canGroup = () => {
+    const { type } = configWatch;
+    if (type === "pie") {
+      return false;
+    }
+
+    if (type === "doughnut") {
+      return false;
+    }
+
+    if (type === "polar") {
+      return false;
+    }
+
+    return true;
   };
 
   const content = () => {
@@ -389,6 +509,17 @@ export function ChartEditDialog({
                                     <CheckIcon />
                                   </DropdownMenuShortcut>
                                 </DropdownMenuItem>
+                                <DropdownMenuItem
+                                  disabled={p.type === "select"}
+                                  onClick={() => changeColumnType(i, "select")}
+                                >
+                                  Select
+                                  <DropdownMenuShortcut
+                                    hidden={p.type !== "select"}
+                                  >
+                                    <CheckIcon />
+                                  </DropdownMenuShortcut>
+                                </DropdownMenuItem>
                               </DropdownMenuSubContent>
                             </DropdownMenuPortal>
                           </DropdownMenuSub>
@@ -397,58 +528,14 @@ export function ChartEditDialog({
                               <ArrowRightToLineIcon className="text-muted-foreground" />
                               Insert right
                             </DropdownMenuSubTrigger>
-                            <DropdownMenuPortal>
-                              <DropdownMenuSubContent>
-                                <DropdownMenuLabel className="font-medium">
-                                  Column type
-                                </DropdownMenuLabel>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuItem
-                                  onClick={() => addNextColumn(i, "text")}
-                                >
-                                  Text
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                  onClick={() => addNextColumn(i, "number")}
-                                >
-                                  Number
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                  onClick={() => addNextColumn(i, "date")}
-                                >
-                                  Date
-                                </DropdownMenuItem>
-                              </DropdownMenuSubContent>
-                            </DropdownMenuPortal>
+                            {renderInsertMenus(i)}
                           </DropdownMenuSub>
                           <DropdownMenuSub>
                             <DropdownMenuSubTrigger hidden={i === 0}>
                               <ArrowLeftToLineIcon className="text-muted-foreground" />
                               Insert left
                             </DropdownMenuSubTrigger>
-                            <DropdownMenuPortal>
-                              <DropdownMenuSubContent>
-                                <DropdownMenuLabel className="font-medium">
-                                  Column type
-                                </DropdownMenuLabel>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuItem
-                                  onClick={() => addNextColumn(i - 1, "text")}
-                                >
-                                  Text
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                  onClick={() => addNextColumn(i - 1, "number")}
-                                >
-                                  Number
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                  onClick={() => addNextColumn(i - 1, "date")}
-                                >
-                                  Date
-                                </DropdownMenuItem>
-                              </DropdownMenuSubContent>
-                            </DropdownMenuPortal>
+                            {renderInsertMenus(i - 1)}
                           </DropdownMenuSub>
                           <DropdownMenuSeparator hidden={p.default} />
                           <DropdownMenuItem
@@ -471,7 +558,7 @@ export function ChartEditDialog({
             {dataField.fields.map((d, di) => (
               <TableRow key={d.vId} className="divide-x">
                 {propertiesField.fields.map((p, pi) => {
-                  // const cell = d[p.id];
+                  const placeholder = propertiesWatch[pi].name;
                   if (p.type === "date") {
                     return (
                       <TableCell key={p.vId}>
@@ -484,7 +571,7 @@ export function ChartEditDialog({
                             return (
                               <DatePicker
                                 value={date}
-                                placeholder={watch(`properties.${pi}.name`)}
+                                placeholder={placeholder}
                                 calendarProps={(close) => {
                                   return {
                                     mode: "single",
@@ -511,7 +598,60 @@ export function ChartEditDialog({
                   }
 
                   if (p.type === "select") {
-                    return <TableCell key={p.vId}></TableCell>;
+                    return (
+                      <TableCell key={p.vId}>
+                        <Controller
+                          control={control}
+                          name={`data.${di}.${p.id}`}
+                          render={({ field: { value, onChange } }) => {
+                            return (
+                              <AutocompleteDropdown
+                                placeholder={placeholder}
+                                value={value ? `${value}` : undefined}
+                                items={propertiesWatch[pi].options ?? []}
+                                renderItem={(v) => v}
+                                getKey={(v) => v}
+                                showCreateSuggestion={true}
+                                onCreate={(v) => {
+                                  const current = propertiesWatch[pi];
+                                  const options = current.options ?? [];
+                                  const property = {
+                                    ...current,
+                                    options: [...options, v],
+                                  } satisfies Property;
+
+                                  propertiesField.update(pi, property);
+                                  onChange(v);
+                                }}
+                                onSelect={onChange}
+                                onDelete={(v) => {
+                                  const current = propertiesWatch[pi];
+                                  const options = current.options ?? [];
+                                  const property = {
+                                    ...current,
+                                    options: options.filter((op) => op !== v),
+                                  } satisfies Property;
+
+                                  propertiesField.update(pi, property);
+                                  const data = getValues("data");
+                                  propertiesWatch.forEach((property) => {
+                                    data.forEach((data, index) => {
+                                      const op = data[property.id];
+                                      if (op === v) {
+                                        setValue(
+                                          `data.${index}.${property.id}`,
+                                          undefined
+                                        );
+                                      }
+                                    });
+                                  });
+                                }}
+                              />
+                            );
+                          }}
+                        />
+                      </TableCell>
+                    );
                   }
 
                   return (
@@ -522,7 +662,7 @@ export function ChartEditDialog({
                         render={({ field: { value, onChange } }) => {
                           return (
                             <Input
-                              placeholder={watch(`properties.${pi}.name`)}
+                              placeholder={placeholder}
                               value={value ?? ""}
                               onChange={(evt) => {
                                 const v = evt.target.value;
@@ -547,6 +687,14 @@ export function ChartEditDialog({
                     onClick={() => deleteRow(di)}
                   >
                     <Trash2Icon />
+                  </Button>
+                  <Button
+                    size="icon"
+                    variant="secondary"
+                    className="size-8 ms-2"
+                    onClick={() => duplicateRow(di)}
+                  >
+                    <CopyIcon />
                   </Button>
                 </TableCell>
               </TableRow>
@@ -614,41 +762,26 @@ export function ChartEditDialog({
                   }}
                 >
                   <DropdownMenuGroup>
-                    <DropdownMenuItem
-                      onClick={() => {
-                        setValue(`config.type`, "bar");
-                      }}
-                    >
-                      {renderChartIcon("bar")}
-                      Bar
-                      <DropdownMenuShortcut hidden={configWatch.type !== "bar"}>
-                        <CheckIcon />
-                      </DropdownMenuShortcut>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() => {
-                        setValue(`config.type`, "line");
-                      }}
-                    >
-                      {renderChartIcon("line")}
-                      Line
-                      <DropdownMenuShortcut
-                        hidden={configWatch.type !== "line"}
-                      >
-                        <CheckIcon />
-                      </DropdownMenuShortcut>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() => {
-                        setValue(`config.type`, "pie");
-                      }}
-                    >
-                      {renderChartIcon("pie")}
-                      Pie
-                      <DropdownMenuShortcut hidden={configWatch.type !== "pie"}>
-                        <CheckIcon />
-                      </DropdownMenuShortcut>
-                    </DropdownMenuItem>
+                    {chartMenus.map((menu, i) => {
+                      const Icon = menu.icon;
+                      return (
+                        <DropdownMenuItem
+                          key={i}
+                          onClick={() => {
+                            setValue(`config.type`, menu.type);
+                            setValue("config.groupKey", undefined);
+                          }}
+                        >
+                          <Icon className="opacity-60" />
+                          {menu.name}
+                          <DropdownMenuShortcut
+                            hidden={configWatch.type !== menu.type}
+                          >
+                            <CheckIcon />
+                          </DropdownMenuShortcut>
+                        </DropdownMenuItem>
+                      );
+                    })}
                   </DropdownMenuGroup>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -771,6 +904,70 @@ export function ChartEditDialog({
               </DropdownMenu>
             </div>
 
+            <div className="flex flex-col">
+              <div className="text-sm font-medium leading-none mb-1.5">
+                Group by
+              </div>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className="justify-start"
+                    disabled={propertiesWatch.length < 3 || !canGroup()}
+                  >
+                    <span
+                      className={cn("font-normal", {
+                        "text-muted-foreground": !groupKeyWatch,
+                      })}
+                    >
+                      {propertiesWatch.find((p) => p.id === groupKeyWatch)
+                        ?.name || "None"}
+                    </span>
+                    <ChevronDownIcon className="ms-auto opacity-50" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  align="start"
+                  style={{
+                    width: "var(--radix-dropdown-menu-trigger-width)",
+                  }}
+                >
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem
+                      onClick={() => {
+                        setValue(`config.groupKey`, undefined);
+                      }}
+                    >
+                      <span className="text-muted-foreground">None</span>
+                      <DropdownMenuShortcut
+                        hidden={configWatch.groupKey !== undefined}
+                      >
+                        <CheckIcon />
+                      </DropdownMenuShortcut>
+                    </DropdownMenuItem>
+                    {propertiesWatch.map((p) => {
+                      return (
+                        <DropdownMenuItem
+                          key={p.id}
+                          disabled={configWatch?.labelKey === p.id}
+                          onClick={() => {
+                            setValue(`config.groupKey`, p.id);
+                          }}
+                        >
+                          {p.name}
+                          <DropdownMenuShortcut
+                            hidden={p.id !== configWatch.groupKey}
+                          >
+                            <CheckIcon />
+                          </DropdownMenuShortcut>
+                        </DropdownMenuItem>
+                      );
+                    })}
+                  </DropdownMenuGroup>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+
             <div className="flex space-x-2">
               <Button
                 size="sm"
@@ -792,7 +989,11 @@ export function ChartEditDialog({
                 variant="secondary"
                 onClick={() => {
                   setChartData(undefined);
-                  setValue("config", { ...defaultData.config });
+                  const labelKey = propertiesWatch.find((p) => p.default)?.id;
+                  setValue("config", {
+                    ...defaultData.config,
+                    labelKey: labelKey ?? defaultData.config.labelKey,
+                  });
                 }}
               >
                 Reset
@@ -800,7 +1001,7 @@ export function ChartEditDialog({
             </div>
           </div>
 
-          <div className="w-full flex justify-center items-center border">
+          <div className="w-full flex justify-center items-center border p-2">
             <ChartRenderer chartData={chartData} />
           </div>
         </div>

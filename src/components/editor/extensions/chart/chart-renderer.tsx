@@ -1,12 +1,22 @@
-import { Chart, ChartConfiguration, ChartData } from "chart.js";
+import { Chart, ChartConfiguration, ChartData, ChartType } from "chart.js";
 import { useEffect, useState } from "react";
 import { ChartData as ChartConfigData } from "./common";
 import { useTheme } from "next-themes";
 
-function calculateChartData(chartConfigData: ChartConfigData) {
-  const { config, data } = chartConfigData;
+const colors = [
+  "#4361ee",
+  "#ea6759",
+  "#f3c65f",
+  "#8bc28c",
+  "#f18aad",
+  "#f88f58",
+  "#7a7a7a",
+];
 
-  const { labelKey, dataKey } = config;
+function calculateChartData(chartConfigData: ChartConfigData) {
+  const { config, data, properties } = chartConfigData;
+
+  const { labelKey, dataKey, groupKey } = config;
 
   const labelListRaw = data.map((d) => {
     return `${d[labelKey] ?? "undefined"}`;
@@ -14,31 +24,52 @@ function calculateChartData(chartConfigData: ChartConfigData) {
 
   const labelList = [...new Set(labelListRaw)];
 
-  let dataList: number[] = [];
+  const dataList: { label: string; values: number[] }[] = [];
 
-  if (dataKey) {
-    const sumsObject = data.reduce<{ [key: string]: number }>((acc, v) => {
-      let newValue = v[dataKey];
-      if (typeof newValue !== "number") {
-        newValue = 0;
-      }
+  const defaultGroupKey =
+    properties.find((p) => p.id === dataKey)?.name ?? "Count";
+  const group = data.reduce<Map<string, typeof data>>((acc, v) => {
+    let key = defaultGroupKey;
+    if (groupKey) {
+      key = `${v[groupKey]}`;
+    }
 
-      const key = `${v[labelKey]}`;
-      const oldValue = acc[key];
-      acc[key] = (oldValue ?? 0) + newValue;
-      return acc;
-    }, {});
+    const oldValue = acc.get(key) ?? [];
+    acc.set(key, [...oldValue, v]);
+    return acc;
+  }, new Map());
 
-    dataList = labelList.map((l) => sumsObject[l]);
-  } else {
-    const countsObject = labelListRaw.reduce<{ [key: string]: number }>(
-      (acc, v) => {
-        acc[v] = (acc[v] || 0) + 1;
+  for (const [key, values] of group) {
+    if (dataKey) {
+      const sumsObject = values.reduce<{ [key: string]: number }>((acc, v) => {
+        let newValue = v[dataKey];
+        if (typeof newValue !== "number") {
+          newValue = 0;
+        }
+
+        const key = `${v[labelKey]}`;
+        const oldValue = acc[key];
+        acc[key] = (oldValue ?? 0) + newValue;
         return acc;
-      },
-      {}
-    );
-    dataList = labelList.map((l) => countsObject[l]);
+      }, {});
+
+      dataList.push({
+        label: key,
+        values: labelList.map((l) => sumsObject[l]),
+      });
+    } else {
+      const countsObject = labelListRaw.reduce<{ [key: string]: number }>(
+        (acc, v) => {
+          acc[v] = (acc[v] || 0) + 1;
+          return acc;
+        },
+        {}
+      );
+      dataList.push({
+        label: key,
+        values: labelList.map((l) => countsObject[l]),
+      });
+    }
   }
 
   return {
@@ -62,7 +93,19 @@ function ChartRenderer({ chartData }: { chartData?: ChartConfigData }) {
   }
 
   if (config.type === "pie") {
-    return <PieChartRenderer chartData={chartData} />;
+    return <PieChartRenderer chartData={chartData} type="pie" />;
+  }
+
+  if (config.type === "doughnut") {
+    return <PieChartRenderer chartData={chartData} type="doughnut" />;
+  }
+
+  if (config.type === "polar") {
+    return <PieChartRenderer chartData={chartData} type="polarArea" />;
+  }
+
+  if (config.type === "radar") {
+    return <RadarChartRenderer chartData={chartData} />;
   }
 
   return null;
@@ -77,31 +120,39 @@ function BarChartRenderer({
   const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
-    let chart: Chart<"bar"> | undefined = undefined;
+    const type = "bar" as ChartType;
+    type Type = typeof type;
+    let chart: Chart<Type> | undefined = undefined;
 
     if (!canvas || !chartConfigData) {
       return;
     }
 
-    const style = getComputedStyle(document.body);
-    const primaryColor = style.getPropertyValue("--primary");
+    // const style = getComputedStyle(document.body);
+    // const primaryColor = style.getPropertyValue("--primary");
     const tickColor = theme === "dark" ? "rgba(180, 180, 180, 0.2)" : undefined;
 
     const { labelList, dataList } = calculateChartData(chartConfigData);
 
-    const chartData: ChartData<"bar"> = {
+    const chartData: ChartData<Type> = {
       labels: labelList,
-      datasets: [
-        {
-          data: dataList,
-          backgroundColor: `color-mix(in oklch, ${primaryColor}, transparent 70%)`,
-          borderColor: primaryColor,
-          borderWidth: 1,
-        },
-      ],
+      datasets: dataList.map(({ label, values }, i) => {
+        const color = colors[i];
+        return {
+          label: label,
+          data: values,
+          backgroundColor: color,
+          hoverBackgroundColor: color,
+          borderRadius: {
+            topLeft: 4,
+            topRight: 4,
+          },
+        };
+      }),
     };
 
-    const chartConfig: ChartConfiguration<"bar"> = {
+    const title = chartConfigData.config.title ?? "Bar Chart";
+    const chartConfig: ChartConfiguration<Type> = {
       type: "bar",
       data: chartData,
       options: {
@@ -121,19 +172,14 @@ function BarChartRenderer({
             },
           },
         },
-        layout: {
-          padding: 24,
-        },
         plugins: {
-          legend: {
-            display: false,
-          },
           title: {
             display: true,
-            text: chartConfigData.config.title ?? "Bar Chart",
+            text: title,
             padding: {
-              bottom: 10,
+              top: 10,
             },
+            position: "bottom",
           },
         },
       },
@@ -158,35 +204,39 @@ function LineChartRenderer({
   const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
-    let chart: Chart<"line"> | undefined = undefined;
+    const type = "line" as ChartType;
+    type Type = typeof type;
+    let chart: Chart<Type> | undefined = undefined;
     if (!canvas || !chartConfigData) {
       return;
     }
 
-    const style = getComputedStyle(document.body);
-    const primaryColor = style.getPropertyValue("--primary");
+    // const style = getComputedStyle(document.body);
+    // const primaryColor = style.getPropertyValue("--primary");
     const tickColor = theme === "dark" ? "rgba(180, 180, 180, 0.2)" : undefined;
 
     const { labelList, dataList } = calculateChartData(chartConfigData);
 
-    const chartData: ChartData<"line"> = {
+    const chartData: ChartData<Type> = {
       labels: labelList,
-      datasets: [
-        {
-          data: dataList,
-          backgroundColor: `color-mix(in oklch, ${primaryColor}, transparent 80%)`,
-          borderColor: primaryColor,
-          pointBackgroundColor: primaryColor,
-          pointBorderColor: primaryColor,
+      datasets: dataList.map(({ label, values }, i) => {
+        const color = colors[i];
+        return {
+          label: label,
+          data: values,
+          backgroundColor: `color-mix(in srgb, ${color}, transparent 70%)`,
+          borderColor: color,
+          pointBackgroundColor: color,
           fill: true,
           tension: 0.1,
           borderWidth: 2,
           pointRadius: 3.5,
-        },
-      ],
+        };
+      }),
     };
 
-    const chartConfig: ChartConfiguration<"line"> = {
+    const title = chartConfigData.config.title ?? "Line Chart";
+    const chartConfig: ChartConfiguration<Type> = {
       type: "line",
       data: chartData,
       options: {
@@ -206,19 +256,14 @@ function LineChartRenderer({
             },
           },
         },
-        layout: {
-          padding: 24,
-        },
         plugins: {
-          legend: {
-            display: false,
-          },
           title: {
             display: true,
-            text: chartConfigData.config.title ?? "Line Chart",
+            text: title,
             padding: {
-              bottom: 10,
+              top: 10,
             },
+            position: "bottom",
           },
         },
       },
@@ -235,43 +280,63 @@ function LineChartRenderer({
 }
 
 function PieChartRenderer({
+  type,
   chartData: chartConfigData,
 }: {
+  type: "doughnut" | "pie" | "polarArea";
   chartData?: ChartConfigData;
 }) {
   const { theme } = useTheme();
   const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
-    let chart: Chart<"doughnut"> | undefined = undefined;
+    type Type = typeof type;
+    let chart: Chart<Type> | undefined = undefined;
     if (!canvas || !chartConfigData) {
       return;
     }
 
+    const tickColor = theme === "dark" ? "rgba(180, 180, 180, 0.2)" : undefined;
+
     const { labelList, dataList } = calculateChartData(chartConfigData);
 
-    const chartData: ChartData<"doughnut"> = {
+    const chartData: ChartData<Type> = {
       labels: labelList,
-      datasets: [
-        {
-          data: dataList,
+      datasets: dataList.map(({ values }) => {
+        return {
+          data: values,
           hoverOffset: 10,
           offset: 5,
           hoverBorderWidth: 0,
           borderWidth: 0,
-        },
-      ],
+          backgroundColor: values.map((_, i) => colors[i]),
+        };
+      }),
     };
 
-    const chartConfig: ChartConfiguration<"doughnut"> = {
-      type: "doughnut",
+    const title =
+      chartConfigData.config.title ??
+      `${type === "doughnut" ? "Doughnut" : "Pie"} Chart`;
+
+    const chartConfig: ChartConfiguration<Type> = {
+      type: type,
       data: chartData,
       options: {
-        maintainAspectRatio: true,
         aspectRatio: 16 / 9,
-        layout: {
-          padding: 20,
-        },
+        scales:
+          type === "polarArea"
+            ? {
+                r: {
+                  beginAtZero: true,
+                  grid: {
+                    color: tickColor,
+                  },
+                  angleLines: {
+                    color: tickColor,
+                  },
+                },
+              }
+            : undefined,
         plugins: {
           legend: {
             align: "center",
@@ -279,9 +344,9 @@ function PieChartRenderer({
           },
           title: {
             display: true,
-            text: chartConfigData.config.title ?? "Pie Chart",
+            text: title,
             padding: {
-              top: 20,
+              top: 10,
             },
             position: "bottom",
           },
@@ -301,13 +366,100 @@ function PieChartRenderer({
                     .reduce((acc, v) => {
                       return acc + v;
                     }, 0);
-                  const percentage = Math.round((value * 100) / sum) + "%";
 
-                  label += `${value} (${percentage})`;
+                  if (type === "polarArea") {
+                    const percentage = Math.round((value.r * 100) / sum) + "%";
+                    label += `${value.r} (${percentage})`;
+                  } else {
+                    const percentage = Math.round((value * 100) / sum) + "%";
+                    label += `${value} (${percentage})`;
+                  }
                 }
                 return label;
               },
             },
+          },
+        },
+      },
+    };
+
+    chart = new Chart(canvas, chartConfig);
+
+    return () => {
+      chart?.destroy();
+    };
+  }, [canvas, chartConfigData, type, theme]);
+
+  return <canvas ref={setCanvas} />;
+}
+
+function RadarChartRenderer({
+  chartData: chartConfigData,
+}: {
+  chartData?: ChartConfigData;
+}) {
+  const { theme } = useTheme();
+  const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null);
+
+  useEffect(() => {
+    const type = "radar" as ChartType;
+    type Type = typeof type;
+    let chart: Chart<Type> | undefined = undefined;
+    if (!canvas || !chartConfigData) {
+      return;
+    }
+
+    const tickColor =
+      theme === "dark" ? "rgba(180, 180, 180, 0.2)" : "rgba(0, 0, 0, 0.1)";
+
+    const { labelList, dataList } = calculateChartData(chartConfigData);
+
+    const chartData: ChartData<Type> = {
+      labels: labelList,
+      datasets: dataList.map(({ label, values }, i) => {
+        const color = colors[i];
+        return {
+          label: label,
+          data: values,
+          backgroundColor: `color-mix(in srgb, ${color}, transparent 70%)`,
+          borderColor: color,
+          pointBackgroundColor: color,
+          fill: true,
+        };
+      }),
+    };
+
+    const title = chartConfigData.config.title ?? `Radar Chart`;
+
+    const chartConfig: ChartConfiguration<Type> = {
+      type: type,
+      data: chartData,
+      options: {
+        aspectRatio: 16 / 9,
+        elements: {
+          line: {
+            borderWidth: 3,
+          },
+        },
+        scales: {
+          r: {
+            beginAtZero: true,
+            grid: {
+              color: tickColor,
+            },
+            angleLines: {
+              color: tickColor,
+            },
+          },
+        },
+        plugins: {
+          title: {
+            display: true,
+            text: title,
+            padding: {
+              top: 10,
+            },
+            position: "bottom",
           },
         },
       },

@@ -141,7 +141,7 @@
       "content": [
         {
           "type": "text",
-          "text": "import { BlockEditor } from \"./components/editor\";\n\nexport default function App() {\n  return (\n     <BlockEditor />\n  )\n}"
+          "text": "import { BlockEditor } from \"./components/editor\";\n\nexport default function App() {\n  const [editor, setEditor] = useState<Editor>();\n  return (\n     <BlockEditor\n       onCreate={setEditor}\n       onUpdate={setEditor}\n     />\n  )\n}"
         }
       ]
     },
@@ -669,7 +669,7 @@
       "content": [
         {
           "type": "text",
-          "text": "Chart example (Experimental)"
+          "text": "Chart example (Beta)"
         }
       ]
     },
@@ -682,7 +682,7 @@
       "content": [
         {
           "type": "text",
-          "text": "{\"config\":{\"type\":\"line\",\"labelKey\":\"b0781371-3342-426e-a608-97ffea77ef3f\",\"dataKey\":\"5305eed5-65ad-4a00-8bfa-52bc90834c70\",\"title\":\"Weekly sale\"},\"properties\":[{\"default\":true,\"id\":\"b0781371-3342-426e-a608-97ffea77ef3f\",\"name\":\"Name\",\"type\":\"text\"},{\"id\":\"5305eed5-65ad-4a00-8bfa-52bc90834c70\",\"name\":\"Sale\",\"type\":\"number\"}],\"data\":[{\"b0781371-3342-426e-a608-97ffea77ef3f\":\"Mon\",\"5305eed5-65ad-4a00-8bfa-52bc90834c70\":100},{\"b0781371-3342-426e-a608-97ffea77ef3f\":\"Tue\",\"5305eed5-65ad-4a00-8bfa-52bc90834c70\":120},{\"b0781371-3342-426e-a608-97ffea77ef3f\":\"Wed\",\"5305eed5-65ad-4a00-8bfa-52bc90834c70\":50},{\"b0781371-3342-426e-a608-97ffea77ef3f\":\"Thu\",\"5305eed5-65ad-4a00-8bfa-52bc90834c70\":80},{\"b0781371-3342-426e-a608-97ffea77ef3f\":\"Fri\",\"5305eed5-65ad-4a00-8bfa-52bc90834c70\":150},{\"b0781371-3342-426e-a608-97ffea77ef3f\":\"Sat\",\"5305eed5-65ad-4a00-8bfa-52bc90834c70\":200},{\"b0781371-3342-426e-a608-97ffea77ef3f\":\"Sun\",\"5305eed5-65ad-4a00-8bfa-52bc90834c70\":180}]}"
+          "text": "{\"config\":{\"type\":\"bar\",\"title\":\"Score compare\",\"labelKey\":\"5305eed5-65ad-4a00-8bfa-52bc90834c70\",\"dataKey\":\"a9b5a0b9-572f-45ce-9fe3-f74498f35824\",\"groupKey\":\"b0781371-3342-426e-a608-97ffea77ef3f\"},\"properties\":[{\"default\":true,\"id\":\"b0781371-3342-426e-a608-97ffea77ef3f\",\"name\":\"Name\",\"type\":\"text\"},{\"id\":\"5305eed5-65ad-4a00-8bfa-52bc90834c70\",\"name\":\"Specification\",\"type\":\"select\",\"options\":[\"CPU\",\"Memory\",\"GPU\",\"Display\",\"Battery\"]},{\"id\":\"a9b5a0b9-572f-45ce-9fe3-f74498f35824\",\"name\":\"Score\",\"type\":\"number\"}],\"data\":[{\"b0781371-3342-426e-a608-97ffea77ef3f\":\"iPhone X\",\"5305eed5-65ad-4a00-8bfa-52bc90834c70\":\"CPU\",\"a9b5a0b9-572f-45ce-9fe3-f74498f35824\":80},{\"b0781371-3342-426e-a608-97ffea77ef3f\":\"iPhone X\",\"5305eed5-65ad-4a00-8bfa-52bc90834c70\":\"Memory\",\"a9b5a0b9-572f-45ce-9fe3-f74498f35824\":70},{\"b0781371-3342-426e-a608-97ffea77ef3f\":\"iPhone X\",\"5305eed5-65ad-4a00-8bfa-52bc90834c70\":\"GPU\",\"a9b5a0b9-572f-45ce-9fe3-f74498f35824\":90},{\"b0781371-3342-426e-a608-97ffea77ef3f\":\"iPhone X\",\"5305eed5-65ad-4a00-8bfa-52bc90834c70\":\"Display\",\"a9b5a0b9-572f-45ce-9fe3-f74498f35824\":90},{\"b0781371-3342-426e-a608-97ffea77ef3f\":\"iPhone X\",\"5305eed5-65ad-4a00-8bfa-52bc90834c70\":\"Battery\",\"a9b5a0b9-572f-45ce-9fe3-f74498f35824\":60},{\"b0781371-3342-426e-a608-97ffea77ef3f\":\"Samsung S20\",\"5305eed5-65ad-4a00-8bfa-52bc90834c70\":\"CPU\",\"a9b5a0b9-572f-45ce-9fe3-f74498f35824\":60},{\"b0781371-3342-426e-a608-97ffea77ef3f\":\"Samsung S20\",\"5305eed5-65ad-4a00-8bfa-52bc90834c70\":\"Memory\",\"a9b5a0b9-572f-45ce-9fe3-f74498f35824\":90},{\"b0781371-3342-426e-a608-97ffea77ef3f\":\"Samsung S20\",\"5305eed5-65ad-4a00-8bfa-52bc90834c70\":\"GPU\",\"a9b5a0b9-572f-45ce-9fe3-f74498f35824\":70},{\"b0781371-3342-426e-a608-97ffea77ef3f\":\"Samsung S20\",\"5305eed5-65ad-4a00-8bfa-52bc90834c70\":\"Display\",\"a9b5a0b9-572f-45ce-9fe3-f74498f35824\":100},{\"b0781371-3342-426e-a608-97ffea77ef3f\":\"Samsung S20\",\"5305eed5-65ad-4a00-8bfa-52bc90834c70\":\"Battery\",\"a9b5a0b9-572f-45ce-9fe3-f74498f35824\":90}]}"
         }
       ]
     },

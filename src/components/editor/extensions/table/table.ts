@@ -13,7 +13,7 @@ export const CustomTable = Table.extend({
     const table: DOMOutputSpec = [
       "div",
       {
-        class: cn("table-wrapper overflow-y-auto p-[1em] relative"),
+        class: cn("table-wrapper overflow-y-auto p-[1em] -ml-[1rem] relative"),
       },
       [
         "table",

@@ -1,10 +1,11 @@
 import z from "zod";
 
 const ChartConfigSchema = z.object({
-  type: z.enum(["bar", "line", "pie"]),
+  type: z.enum(["bar", "line", "doughnut", "pie", "polar", "radar"]),
+  title: z.optional(z.string()),
   labelKey: z.string(),
   dataKey: z.optional(z.string()),
-  title: z.optional(z.string()),
+  groupKey: z.optional(z.string()),
 });
 
 const PropertySchema = z.object({
