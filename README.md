@@ -14,6 +14,7 @@ Notion style AI-powered block editor build with [Tiptap](https://tiptap.dev/) + 
 - `ai-writer`: Generate or modify contents with the help of LLM using [Vercel AI SDK](https://sdk.vercel.ai)
 - `mermaid`: Render diagram as a code using [Mermaid](https://mermaid.js.org/)
 - `chart`: Render charts using [Chart.js](https://www.chartjs.org/)
+- `tree-diagram`: Render a tree diagrm using [D3 Hierarchy](https://d3js.org/d3-hierarchy/hierarchy)
 
 ## Usage
 

@@ -17,6 +17,7 @@ import { CustomTable } from "./extensions/table";
 import { Markdown } from "@tiptap/markdown";
 import { Mermaid } from "./extensions/mermaid";
 import { Chart } from "./extensions/chart";
+import { TreeDiagram } from "./extensions/tree-diagram";
 
 const TiptapStarterKit = StarterKit.configure({
   bulletList: {
@@ -211,6 +212,12 @@ const chart = Chart.configure({
   },
 })
 
+const treeDiagram = TreeDiagram.configure({
+  HTMLAttributes: {
+    class: cn("border p-2 my-4 w-full flex items-center justify-center aspect-video"),
+  },
+})
+
 export const defaultExtensions = [
   TiptapStarterKit,
   TiptapHeading,
@@ -229,5 +236,6 @@ export const defaultExtensions = [
   aiPlaceholder,
   aiWriter,
   mermaid,
-  chart
+  chart,
+  treeDiagram
 ];

@@ -6,6 +6,7 @@ import mermaid from "mermaid";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { ChartData, ChartRenderer, parseChartData } from "./extensions/chart";
+import { TreeDiagramRenderer } from "./extensions/tree-diagram";
 
 const hljsCopyButtonPlugin: HLJSPlugin = {
   "after:highlightElement"({ el, text }) {
@@ -26,7 +27,7 @@ const hljsCopyButtonPlugin: HLJSPlugin = {
 
     const copyButton = document.createElement("button");
     copyButton.className = cn(
-      "absolute text-sm rounded bg-gray-800/50 text-white/70 hover:text-white border border-white/70 hover:border-white top-3 end-3 px-2 py-0.5"
+      "absolute text-sm rounded bg-gray-800/50 text-white/70 hover:text-white border border-white/70 hover:border-white top-3 inset-e-3 px-2 py-0.5"
     );
     copyButton.textContent = "Copy";
 
@@ -48,7 +49,7 @@ const hljsCopyButtonPlugin: HLJSPlugin = {
   },
 };
 
-const ChartComponents = ({ root }: { root: HTMLElement | null }) => {
+function ChartComponents({ root }: { root: HTMLElement | null }) {
   const [chartNodes, setChartNodes] = useState<
     { element: Element; data: ChartData }[]
   >([]);
@@ -93,6 +94,45 @@ const ChartComponents = ({ root }: { root: HTMLElement | null }) => {
   });
 };
 
+function TreeDiagramComponents({ root }: { root: HTMLElement | null }) {
+  const [treeNodes, setTreeNodes] = useState<
+    { element: Element; data: string }[]
+  >([]);
+
+  useEffect(() => {
+    if (!root) {
+      return;
+    }
+
+    const elements = Array.from(root.querySelectorAll(".tree"));
+
+    const list: typeof treeNodes = [];
+
+    for (const element of elements) {
+      const value = element.textContent;
+      if (!value) {
+        continue;
+      }
+
+      element.textContent = "";
+      element.removeAttribute("data-processed");
+      element.setAttribute("data-processed", "true");
+
+      list.push({ element, data: value });
+    }
+
+    setTreeNodes(list);
+  }, [root]);
+
+  if (!root) {
+    return null;
+  }
+
+  return treeNodes.map(({ data, element }, i) => {
+    return createPortal(<TreeDiagramRenderer treeData={data} />, element, i);
+  });
+};
+
 const ContentRenderer = ({ html }: { html?: string }) => {
   const [element, setElement] = useState<HTMLElement | null>(null);
 
@@ -133,6 +173,7 @@ const ContentRenderer = ({ html }: { html?: string }) => {
       />
 
       <ChartComponents root={element} />
+      <TreeDiagramComponents root={element} />
     </>
   );
 };

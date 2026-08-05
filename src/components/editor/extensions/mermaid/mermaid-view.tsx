@@ -67,10 +67,6 @@ export function MermaidView({
           className={cn(options.HTMLAttributes.class, HTMLAttributes.class)}
         ></div>
       )}
-      <div
-        ref={containerRef}
-        className={cn(options.HTMLAttributes.class, HTMLAttributes.class)}
-      ></div>
       <div className="absolute flex space-x-1 top-2 right-2">
         <Button
           variant="secondary"
