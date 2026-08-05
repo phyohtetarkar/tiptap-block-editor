@@ -11,6 +11,7 @@ import {
   LetterTextIcon,
   ListIcon,
   ListOrderedIcon,
+  NetworkIcon,
   ShapesIcon,
   SparklesIcon,
   SquarePlayIcon,
@@ -162,6 +163,14 @@ const list: CommandSuggestionItem[] = [
     description: "Render a chart.",
     keywords: ["chart"],
     icon: ChartPieIcon,
+    command: () => {},
+  },
+  {
+    id: "tree",
+    title: "Tree",
+    description: "Render a tree diagram.",
+    keywords: ["tree"],
+    icon: NetworkIcon,
     command: () => {},
   },
   {

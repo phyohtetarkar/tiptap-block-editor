@@ -3,25 +3,28 @@ import { Textarea } from "./textarea";
 import { cn } from "@/lib/utils";
 
 const CodeTextarea = ({
+  id,
   value,
   height,
   onChange,
   className,
+  placeholder,
 }: {
+  id?: string;
   value: string;
   height: number | string;
   onChange?: (value: string) => void;
   className?: string;
+  placeholder?: string;
 }) => {
   const lineContainerRef = useRef<HTMLDivElement | null>(null);
-  const [code, setCode] = useState(value);
   const [lineCount, setLineCount] = useState(0);
   const [inputFocused, setInputFocused] = useState(false);
   const [scrollbarOffset, setScrollbarOffset] = useState(0);
 
   useEffect(() => {
-    setLineCount(code.split("\n").length);
-  }, [code]);
+    setLineCount(value.split("\n").length);
+  }, [value]);
 
   return (
     <div className={cn("flex", className)}>
@@ -55,13 +58,13 @@ const CodeTextarea = ({
           "border-primary": inputFocused,
         })}
       >
-        <div className="h-full w-[1px] bg-border"></div>
+        <div className="h-full w-px bg-border"></div>
       </div>
       <Textarea
-        id="mermaid-code"
-        className="rounded-s-none border-s-0 resize-none font-mono text-[14px]"
-        placeholder="Enter mermaid code"
-        value={code}
+        id={id}
+        className="rounded-s-none border-s-0 resize-none font-mono text-[14px] text-foreground"
+        placeholder={placeholder}
+        value={value}
         wrap="off"
         spellCheck="false"
         style={{
@@ -69,7 +72,7 @@ const CodeTextarea = ({
           lineHeight: 1.5,
         }}
         onChange={(evt) => {
-          setCode(evt.target.value);
+          // setCode(evt.target.value);
           onChange?.(evt.target.value);
         }}
         onFocus={() => {
