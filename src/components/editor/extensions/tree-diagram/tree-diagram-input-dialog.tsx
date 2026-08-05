@@ -21,20 +21,20 @@ const TreeNodeSchema: z.ZodType<TreeNode> = z.lazy(() =>
 );
 
 const expandJson = (value?: string) => {
-    if (!value) {
-      return "";
-    }
-
-    try {
-      const json = JSON.parse(value);
-      const expanded = JSON.stringify(json, null, 2);
-      return expanded;
-    } catch (e) {
-      console.error(e);
-    }
-
+  if (!value) {
     return "";
   }
+
+  try {
+    const json = JSON.parse(value);
+    const expanded = JSON.stringify(json, null, 2);
+    return expanded;
+  } catch (e) {
+    console.error(e);
+  }
+
+  return "";
+};
 
 export function TreeDiagramInputDialog({
   value,
@@ -57,8 +57,8 @@ export function TreeDiagramInputDialog({
       const result = TreeNodeSchema.safeParse(json);
 
       if (!result.success) {
-        const msg = result.error.issues.map((is) => is.message).join(", ");
-        throw Error(msg);
+        // const msg = result.error.issues.map((is) => is.message).join(", ");
+        throw Error("Invalid JSON structure");
       }
 
       onInsert?.(JSON.stringify(result.data));
@@ -71,7 +71,6 @@ export function TreeDiagramInputDialog({
 Enter your tree structure JSON here...
 
 Example:
-
 {
   "name": "Root",
   "children": [

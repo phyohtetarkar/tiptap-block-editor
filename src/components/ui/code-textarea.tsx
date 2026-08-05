@@ -34,7 +34,7 @@ const CodeTextarea = ({
           "p-2 w-12 border border-e-0 rounded-s-me bg-accent rounded-s-md overflow-hidden",
           {
             "border-primary": inputFocused,
-          }
+          },
         )}
         style={{
           paddingBottom: scrollbarOffset + 8,
@@ -91,6 +91,17 @@ const CodeTextarea = ({
           lineContainerRef.current.scrollTop = el.scrollTop || 0;
           const hasScroll = el.scrollWidth > el.clientWidth;
           setScrollbarOffset(hasScroll ? el.offsetHeight - el.clientHeight : 0);
+        }}
+        onKeyDown={(evt) => {
+          if (evt.key === "Tab") {
+            evt.preventDefault();
+
+            const textarea = evt.currentTarget;
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+
+            textarea.setRangeText("\t", start, end, "end");
+          }
         }}
       />
     </div>

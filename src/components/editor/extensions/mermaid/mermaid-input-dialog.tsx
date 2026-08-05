@@ -36,13 +36,6 @@ export function MermaidInputDialog({
     }
   };
 
-  // useEffect(() => {
-  //   if (isOpen) {
-  //     setCode(value ?? "");
-  //     setError(undefined);
-  //   }
-  // }, [isOpen, value]);
-
   return (
     <Dialog
       open={isOpen}
