@@ -5,6 +5,7 @@ import { LucideIcon } from "lucide-react";
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import { MermaidInputDialog } from "../mermaid";
 import { ChartEditDialog } from "../chart";
+import { TreeDiagramInputDialog } from "../tree-diagram";
 
 export interface CommandSuggestionItem extends SuggestionItem {
   icon: LucideIcon;
@@ -24,6 +25,7 @@ const SuggestionList = forwardRef<SuggestionListHandle, SuggestionListProps>(
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [openMermaidInputDialog, setOpenMermaidInputDialog] = useState(false);
     const [openChartEditDialog, setOpenChartEditDialog] = useState(false);
+    const [openTreeEditDialog, setOpenTreeEditDialog] = useState(false);
 
     const selectItem = (index: number) => {
       const item = props.items[index];
@@ -38,6 +40,11 @@ const SuggestionList = forwardRef<SuggestionListHandle, SuggestionListProps>(
 
       if (item.id === "chart") {
         setOpenChartEditDialog(true);
+        return;
+      }
+
+      if (item.id === "tree") {
+        setOpenTreeEditDialog(true);
         return;
       }
 
@@ -82,7 +89,7 @@ const SuggestionList = forwardRef<SuggestionListHandle, SuggestionListProps>(
     }));
     return (
       <>
-        <div className="z-20 flex flex-col space-y-1 bg-popover rounded-md border shadow-md transition-all p-1 max-h-[320px] w-72 overflow-y-auto">
+        <div className="z-20 flex flex-col space-y-1 bg-popover rounded-md border shadow-md transition-all p-1 max-h-80 w-72 overflow-y-auto">
           {props.items.length > 0 ? (
             props.items.map((item, i) => {
               return (
@@ -104,6 +111,11 @@ const SuggestionList = forwardRef<SuggestionListHandle, SuggestionListProps>(
 
                     if (item.id === "chart") {
                       setOpenChartEditDialog(true);
+                      return;
+                    }
+
+                    if (item.id === "tree") {
+                      setOpenTreeEditDialog(true);
                       return;
                     }
 
@@ -161,6 +173,24 @@ const SuggestionList = forwardRef<SuggestionListHandle, SuggestionListProps>(
               },
             });
             setOpenChartEditDialog(false);
+          }}
+        />
+
+        <TreeDiagramInputDialog
+          isOpen={openTreeEditDialog}
+          onOpenChange={setOpenTreeEditDialog}
+          onInsert={(data) => {
+            props.command({
+              command: ({ editor, range }) => {
+                editor
+                  .chain()
+                  .focus()
+                  .deleteRange(range)
+                  .setTreeDiagram({ data })
+                  .run();
+              },
+            });
+            setOpenTreeEditDialog(false);
           }}
         />
       </>

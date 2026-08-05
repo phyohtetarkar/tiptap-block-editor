@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import mermaid from "mermaid";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export function MermaidInputDialog({
   value,
@@ -27,24 +27,27 @@ export function MermaidInputDialog({
   const [error, setError] = useState<string>();
 
   const handleSubmit = async () => {
-    setError(undefined);
     try {
+      setError(undefined);
       await mermaid.parse(code);
       onInsert?.(code);
-    } catch (error: any) {
-      setError(error.message);
+    } catch (e: any) {
+      setError(e.message);
     }
   };
 
-  useEffect(() => {
-    if (isOpen) {
-      setCode(value ?? "");
-      setError(undefined);
-    }
-  }, [isOpen, value]);
-
   return (
-    <Dialog open={isOpen} onOpenChange={onOpenChange} disablePointerDismissal>
+    <Dialog
+      open={isOpen}
+      onOpenChange={onOpenChange}
+      onOpenChangeComplete={(op) => {
+        if (op) {
+          setCode(value ?? "");
+          setError(undefined);
+        }
+      }}
+      disablePointerDismissal
+    >
       <DialogContent aria-describedby={undefined} className="p-0 sm:max-w-2xl">
         <DialogHeader className="p-5 pb-0">
           <DialogTitle>Insert mermaid diagram</DialogTitle>
@@ -54,7 +57,13 @@ export function MermaidInputDialog({
             <Label htmlFor="mermaid-code" className="mb-2">
               Code
             </Label>
-            <CodeTextarea value={code} onChange={setCode} height={300} />
+            <CodeTextarea
+              id="mermaid-code"
+              value={code}
+              onChange={setCode}
+              height={300}
+              placeholder="Enter mermaid code"
+            />
             {error && (
               <div className="text-sm text-destructive mt-1.5">{error}</div>
             )}

@@ -669,7 +669,7 @@
       "content": [
         {
           "type": "text",
-          "text": "Chart example (Beta)"
+          "text": "Chart example"
         }
       ]
     },
@@ -683,6 +683,38 @@
         {
           "type": "text",
           "text": "{\"config\":{\"type\":\"bar\",\"title\":\"Score compare\",\"labelKey\":\"5305eed5-65ad-4a00-8bfa-52bc90834c70\",\"dataKey\":\"a9b5a0b9-572f-45ce-9fe3-f74498f35824\",\"groupKey\":\"b0781371-3342-426e-a608-97ffea77ef3f\"},\"properties\":[{\"default\":true,\"id\":\"b0781371-3342-426e-a608-97ffea77ef3f\",\"name\":\"Name\",\"type\":\"text\"},{\"id\":\"5305eed5-65ad-4a00-8bfa-52bc90834c70\",\"name\":\"Specification\",\"type\":\"select\",\"options\":[\"CPU\",\"Memory\",\"GPU\",\"Display\",\"Battery\"]},{\"id\":\"a9b5a0b9-572f-45ce-9fe3-f74498f35824\",\"name\":\"Score\",\"type\":\"number\"}],\"data\":[{\"b0781371-3342-426e-a608-97ffea77ef3f\":\"iPhone X\",\"5305eed5-65ad-4a00-8bfa-52bc90834c70\":\"CPU\",\"a9b5a0b9-572f-45ce-9fe3-f74498f35824\":80},{\"b0781371-3342-426e-a608-97ffea77ef3f\":\"iPhone X\",\"5305eed5-65ad-4a00-8bfa-52bc90834c70\":\"Memory\",\"a9b5a0b9-572f-45ce-9fe3-f74498f35824\":70},{\"b0781371-3342-426e-a608-97ffea77ef3f\":\"iPhone X\",\"5305eed5-65ad-4a00-8bfa-52bc90834c70\":\"GPU\",\"a9b5a0b9-572f-45ce-9fe3-f74498f35824\":90},{\"b0781371-3342-426e-a608-97ffea77ef3f\":\"iPhone X\",\"5305eed5-65ad-4a00-8bfa-52bc90834c70\":\"Display\",\"a9b5a0b9-572f-45ce-9fe3-f74498f35824\":90},{\"b0781371-3342-426e-a608-97ffea77ef3f\":\"iPhone X\",\"5305eed5-65ad-4a00-8bfa-52bc90834c70\":\"Battery\",\"a9b5a0b9-572f-45ce-9fe3-f74498f35824\":60},{\"b0781371-3342-426e-a608-97ffea77ef3f\":\"Samsung S20\",\"5305eed5-65ad-4a00-8bfa-52bc90834c70\":\"CPU\",\"a9b5a0b9-572f-45ce-9fe3-f74498f35824\":60},{\"b0781371-3342-426e-a608-97ffea77ef3f\":\"Samsung S20\",\"5305eed5-65ad-4a00-8bfa-52bc90834c70\":\"Memory\",\"a9b5a0b9-572f-45ce-9fe3-f74498f35824\":90},{\"b0781371-3342-426e-a608-97ffea77ef3f\":\"Samsung S20\",\"5305eed5-65ad-4a00-8bfa-52bc90834c70\":\"GPU\",\"a9b5a0b9-572f-45ce-9fe3-f74498f35824\":70},{\"b0781371-3342-426e-a608-97ffea77ef3f\":\"Samsung S20\",\"5305eed5-65ad-4a00-8bfa-52bc90834c70\":\"Display\",\"a9b5a0b9-572f-45ce-9fe3-f74498f35824\":100},{\"b0781371-3342-426e-a608-97ffea77ef3f\":\"Samsung S20\",\"5305eed5-65ad-4a00-8bfa-52bc90834c70\":\"Battery\",\"a9b5a0b9-572f-45ce-9fe3-f74498f35824\":90}]}"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "attrs": {
+        "textAlign": null
+      }
+    },
+    {
+      "type": "heading",
+      "attrs": {
+        "textAlign": null,
+        "level": 3
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Tree diagram"
+        }
+      ]
+    },
+    {
+      "type": "treeDiagram",
+      "attrs": {
+        "textAlign": null,
+        "data-content-type": "treeDiagram"
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"name\":\"Software Developer\",\"children\":[{\"name\":\"Foundation\",\"children\":[{\"name\":\"Programming\",\"children\":[{\"name\":\"Language Basics\"},{\"name\":\"OOP\"}]},{\"name\":\"Computer Science\",\"children\":[{\"name\":\"Data Structures\"},{\"name\":\"Algorithms\"}]}]},{\"name\":\"Frontend\",\"children\":[{\"name\":\"HTML/CSS\"},{\"name\":\"JavaScript\",\"children\":[{\"name\":\"React\"},{\"name\":\"TypeScript\"}]}]},{\"name\":\"Backend\",\"children\":[{\"name\":\"API Development\"},{\"name\":\"Database\",\"children\":[{\"name\":\"SQL\"},{\"name\":\"NoSQL\"}]}]},{\"name\":\"Advanced\",\"children\":[{\"name\":\"System Design\"},{\"name\":\"Cloud\"}]}]}"
         }
       ]
     },
